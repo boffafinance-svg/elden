@@ -97,11 +97,8 @@
         .map-image { display: block; width: 100%; height: auto; filter: sepia(0.2) brightness(0.8) contrast(1.1); border-radius: 10px; }
         
         .map-svg-overlay { position: absolute; top: 0; left: 0; width: 100%; height: 100%; z-index: 10; pointer-events: none; }
-        
-        /* FIX per Mobile: pointer-events all e fill quasi invisibile creano la hit-area solida */
         .map-region { fill: rgba(0,0,0,0.01); stroke: rgba(0,0,0,0); stroke-width: 2; cursor: pointer; pointer-events: all; touch-action: manipulation; -webkit-tap-highlight-color: transparent; transition: all 0.4s cubic-bezier(0.23, 1, 0.32, 1); }
         
-        /* Tracciati SVG Mappa */
         .path-nokron { d: path('M 80,100 L 250,70 L 380,100 L 470,250 L 460,430 L 350,510 L 200,530 L 70,420 L 50,250 Z'); }
         .path-sepolcri { d: path('M 70,550 L 180,550 L 250,530 L 350,520 L 440,560 L 520,680 L 520,780 L 450,900 L 250,940 L 80,900 L 50,750 Z'); }
         .path-altus { d: path('M 420,200 L 550,150 L 680,200 L 720,320 L 720,480 L 650,550 L 550,650 L 470,530 L 400,420 Z'); }
@@ -114,13 +111,12 @@
         .region-hover-forgia:hover, #forgia:hover { fill: rgba(178, 76, 61, 0.3); stroke: var(--magic-forgia); filter: drop-shadow(0 0 15px var(--magic-forgia)); }
         .region-hover-cime:hover, #cime:hover { fill: rgba(224, 224, 224, 0.3); stroke: var(--magic-cime); filter: drop-shadow(0 0 15px var(--magic-cime)); }
 
-        /* --- PREVIEW CARDS MAGICHE --- */
+        /* --- PREVIEW CARDS MAGICHE (CON EFFETTI RIPRISTINATI) --- */
         .preview-section { padding: 40px 20px 100px; max-width: 800px; margin: 0 auto; display: flex; flex-direction: column; gap: 30px; align-items: center; width: 100%; position: relative; z-index: 5; }
         .preview-card { background: rgba(10, 10, 9, 0.85); border: 1px solid rgba(255,255,255,0.05); width: 100%; padding: 40px 20px; cursor: pointer; position: relative; overflow: hidden; backdrop-filter: blur(8px); display: flex; flex-direction: column; align-items: center; text-align: center; transition: transform 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275), box-shadow 0.4s; -webkit-tap-highlight-color: transparent; }
         .preview-card:hover { transform: translateY(-10px); box-shadow: 0 15px 40px rgba(0,0,0,1); }
         
         .preview-rune { font-family: "Segoe UI Symbol", "Apple Symbols", var(--font-title); font-size: clamp(3rem, 6vw, 4rem); margin-bottom: 15px; color: var(--text-muted); transition: 0.4s ease; text-shadow: 0 0 10px rgba(0,0,0,0.8); position: relative; z-index: 2; line-height: 1; }
-        /* Aggiungo filter per le SVG, siccome text-shadow si applica solo al testo */
         .preview-card:hover .preview-rune { color: inherit; text-shadow: 0 0 20px currentColor; animation: glint 1.5s infinite alternate; }
         .preview-card:hover .preview-rune svg { filter: drop-shadow(0 0 10px currentColor); }
         
@@ -166,14 +162,14 @@
         .preview-card.cime:hover::before { transform: translateY(0); filter: drop-shadow(0 -5px 15px #fff); animation: cime-breath 3s infinite alternate ease-in-out; }
         @keyframes cime-breath { from { transform: translateY(10px); opacity: 0.7; } to { transform: translateY(-5px); opacity: 1; } }
 
-        /* --- MODAL MAPPA GLOBALE E LORE OVERLAY --- */
+        /* --- OVERLAY DELLA MAPPA / LORE --- */
         .map-modal { position: fixed; top: 0; left: 0; width: 100%; height: 100%; background-color: rgba(5, 5, 5, 0.98); z-index: 1001; display: flex; justify-content: center; align-items: center; opacity: 0; visibility: hidden; transition: 0.4s ease; backdrop-filter: blur(15px); }
         .map-modal.active { opacity: 1; visibility: visible; }
         .map-modal-content { width: 95%; max-width: 900px; position: relative; display: flex; flex-direction: column; align-items: center; }
         
         .overlay { position: fixed; top: 0; left: 0; width: 100%; height: 100%; background-color: rgba(5, 5, 5, 0.96); z-index: 1002; display: flex; justify-content: center; align-items: center; opacity: 0; visibility: hidden; transition: 0.5s cubic-bezier(0.4, 0, 0.2, 1); backdrop-filter: blur(12px); padding: 20px; }
         .overlay.active { opacity: 1; visibility: visible; }
-        .realm-card { background-color: #0c0c0b; border: 1.5px solid var(--region-color); padding: 50px 40px; max-width: 600px; width: 100%; text-align: center; transform: translateY(40px) scale(0.95); transition: 0.5s cubic-bezier(0.34, 1.56, 0.64, 1); box-shadow: 0 0 60px rgba(0,0,0,1), inset 0 0 25px rgba(0,0,0,0.7); position: relative; max-height: 90vh; overflow-y: auto; }
+        .realm-card { background-color: #0c0c0b; border: 1.5px solid var(--region-color); padding: 50px 40px; max-width: 600px; width: 100%; text-align: center; transform: translateY(40px) scale(0.95); transition: 0.5s cubic-bezier(0.34, 1.56, 0.64, 1); box-shadow: 0 0 60px rgba(0,0,0,1), inset 0 0 25px rgba(0,0,0,0.7); position: relative; }
         .overlay.active .realm-card { transform: translateY(0) scale(1); }
         .realm-card::after { content: ''; position: absolute; top: -5px; left: -5px; right: -5px; bottom: -5px; border: 1px solid rgba(255,255,255,0.05); animation: runicPulse 3s infinite; pointer-events: none; }
         
@@ -190,24 +186,11 @@
         .close-overlay:hover { color: var(--region-color); }
 
         /* --- SCHERMATA DELLA MORTE (HP FINITI) --- */
-        .death-screen {
-            position: fixed; top: 0; left: 0; width: 100%; height: 100%;
-            background: rgba(0, 0, 0, 0.95); z-index: 10000;
-            display: flex; flex-direction: column; justify-content: center; align-items: center;
-            opacity: 0; visibility: hidden; transition: opacity 3s ease;
-        }
+        .death-screen { position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0, 0, 0, 0.95); z-index: 10000; display: flex; flex-direction: column; justify-content: center; align-items: center; opacity: 0; visibility: hidden; transition: opacity 3s ease; }
         .death-screen.active { opacity: 1; visibility: visible; }
-        .death-text {
-            font-family: var(--font-title); font-size: clamp(3rem, 10vw, 8rem);
-            color: #8b0000; letter-spacing: 15px; text-shadow: 0 0 30px rgba(139,0,0,0.8);
-            margin-bottom: 40px; transform: scale(0.9); transition: transform 5s ease; text-align: center; line-height: 1.2;
-        }
+        .death-text { font-family: var(--font-title); font-size: clamp(3rem, 10vw, 8rem); color: #8b0000; letter-spacing: 15px; text-shadow: 0 0 30px rgba(139,0,0,0.8); margin-bottom: 40px; transform: scale(0.9); transition: transform 5s ease; text-align: center; line-height: 1.2; }
         .death-screen.active .death-text { transform: scale(1); }
-        .respawn-btn {
-            background: transparent; border: 1px solid #8b0000; color: #8b0000;
-            padding: 15px 40px; font-family: var(--font-title); font-size: 1.2rem;
-            letter-spacing: 3px; cursor: pointer; transition: 0.4s; text-transform: uppercase;
-        }
+        .respawn-btn { background: transparent; border: 1px solid #8b0000; color: #8b0000; padding: 15px 40px; font-family: var(--font-title); font-size: 1.2rem; letter-spacing: 3px; cursor: pointer; transition: 0.4s; text-transform: uppercase; }
         .respawn-btn:hover { background: #8b0000; color: #000; box-shadow: 0 0 20px #8b0000; }
 
         /* --- STILI DELLE PAGINE INTERNE --- */
@@ -251,26 +234,60 @@
         #view-forgia .region-rune, #view-forgia .region-subtitle, #view-forgia .project-card-inner, #view-forgia .card-tags, #view-forgia .card-overlay-btn { color: var(--magic-forgia); }
         #view-cime .region-rune, #view-cime .region-subtitle, #view-cime .project-card-inner, #view-cime .card-tags, #view-cime .card-overlay-btn { color: var(--magic-cime); }
 
-        /* RESPONSIVE AGGIUNTIVO */
+        /* RESPONSIVE AGGIUNTIVO E MAGIE SEMPRE ATTIVE SU MOBILE */
         @media (max-width: 768px) {
             .lang-switch { top: 15px; right: 15px; padding: 5px 10px; font-size: 0.9rem; }
             .hud-container { top: 15px; left: 15px; transform: scale(0.55); }
             .home-btn-container { top: 15px; }
             .shattered-rune { width: 45px; height: 45px; }
-            
             .map-section { padding: 60px 15px 30px; }
             .preview-section { padding: 30px 15px 80px; gap: 20px; }
             .preview-card { padding: 30px 15px; }
-            
             .realm-card { padding: 30px 20px; }
             .close-overlay { top: 10px; right: 15px; font-size: 1.5rem; }
-            
             .project-grid { grid-template-columns: 1fr; }
         }
         @media (max-width: 480px) {
             .hud-container { transform: scale(0.45); }
             .lang-switch { font-size: 0.8rem; gap: 5px; }
         }
+
+        /* SU DISPOSITIVI TOUCH FORZO LE ANIMAZIONI MAGIA A ESSERE SEMPRE ATTIVE */
+        @media (hover: none) and (pointer: coarse) {
+            .preview-card.sepolcri::before { opacity: 0.6; filter: drop-shadow(0 0 10px var(--magic-sepolcri)); animation: creep-vines 4s linear infinite; }
+            .preview-card.sepolcri .preview-rune { color: var(--magic-sepolcri); text-shadow: 0 0 20px var(--magic-sepolcri); animation: glint 1.5s infinite alternate; }
+            .preview-card.sepolcri { border-bottom: 4px solid var(--magic-sepolcri); box-shadow: 0 10px 30px rgba(0,0,0,0.8); }
+
+            .preview-card.nokron::before { box-shadow: 10vw 20px var(--magic-nokron), 50vw 100px #fff, 80vw 40px var(--magic-nokron), 30vw 150px #fff, 90vw 80px var(--magic-nokron), 20vw 200px #fff, 40vw 180px var(--magic-nokron); animation: nokron-up 2.5s linear infinite; opacity: 1; }
+            .preview-card.nokron::after { box-shadow: 25vw 120px #fff, 85vw 30px var(--magic-nokron), 45vw 170px #fff, 65vw 50px var(--magic-nokron), 15vw 210px #fff; animation: nokron-up 4s linear infinite; opacity: 1; }
+            .preview-card.nokron .preview-rune { color: var(--magic-nokron); text-shadow: 0 0 20px var(--magic-nokron); animation: glint 1.5s infinite alternate; }
+            .preview-card.nokron { border-bottom: 4px solid var(--magic-nokron); box-shadow: 0 10px 30px rgba(0,0,0,0.8); }
+
+            .preview-card.altus::before { animation: altus-strike 1s infinite; opacity: 1; }
+            .preview-card.altus::after { animation: altus-strike 1.3s infinite 0.4s; opacity: 1; }
+            .preview-card.altus .preview-rune { color: var(--magic-altus); text-shadow: 0 0 20px var(--magic-altus); animation: glint 1.5s infinite alternate;}
+            .preview-card.altus { border-bottom: 4px solid var(--magic-altus); box-shadow: 0 10px 30px rgba(0,0,0,0.8); }
+
+            .preview-card.forgia::before { opacity: 0.8; bottom: -20px; animation: forge-burn 1.2s infinite alternate ease-in-out; }
+            .preview-card.forgia::after { opacity: 0.4; animation: forge-dance 0.6s infinite alternate ease-in-out; }
+            .preview-card.forgia .preview-rune { color: var(--magic-forgia); text-shadow: 0 0 20px var(--magic-forgia); animation: glint 1.5s infinite alternate; }
+            .preview-card.forgia { border-bottom: 4px solid var(--magic-forgia); box-shadow: 0 10px 30px rgba(0,0,0,0.8); }
+
+            .preview-card.cime::before { transform: translateY(0); filter: drop-shadow(0 -5px 15px #fff); animation: cime-breath 3s infinite alternate ease-in-out; }
+            .preview-card.cime .preview-rune { color: var(--magic-cime); text-shadow: 0 0 20px var(--magic-cime); animation: glint 1.5s infinite alternate; }
+            .preview-card.cime { border-bottom: 4px solid var(--magic-cime); box-shadow: inset 0 -30px 40px rgba(224,224,224,0.15), 0 10px 30px rgba(0,0,0,0.8); }
+        }
+
+        /* ANIMAZIONI DI BASE */
+        @keyframes pulse { 0% { opacity: 0.5; } 50% { opacity: 1; } 100% { opacity: 0.5; } }
+        @keyframes glint { from { filter: brightness(1) drop-shadow(0 0 10px currentColor); } to { filter: brightness(1.3) drop-shadow(0 0 25px currentColor); } }
+        @keyframes runicPulse { 0% { border-color: rgba(255,255,255,0.05); box-shadow: 0 0 0px var(--region-color); } 50% { border-color: var(--region-color); box-shadow: 0 0 15px var(--region-color); } 100% { border-color: rgba(255,255,255,0.05); box-shadow: 0 0 0px var(--region-color); } }
+        @keyframes subtleRotate { from { transform: rotate(0deg); } to { transform: rotate(360deg); } }
+        @keyframes magicGlowSepolcri { 0% { background-position: 50% 50%; } 100% { background-position: 51% 51%; filter: hue-rotate(5deg); } }
+        @keyframes magicGlowNokron { 0% { background-position: 50% 50%; } 100% { background-position: 49% 49%; filter: hue-rotate(-5deg); } }
+        @keyframes magicGlowAltus { 0% { background-position: 50% 50%; } 100% { background-position: 50.5% 50.5%; filter: brightness(1.1); } }
+        @keyframes magicGlowForgia { 0% { background-position: 50% 50%; } 100% { background-position: 49.5% 49.5%; filter: brightness(1.1) saturate(1.1); } }
+        @keyframes magicGlowCime { 0% { background-position: 50% 50%; } 100% { background-position: 50.5% 49.5%; filter: brightness(1.05) contrast(1.05); } }
     </style>
 </head>
 <body>
@@ -323,11 +340,11 @@
             <div class="map-container">
                 <img src="mappa.jpg" alt="Map" class="map-image">
                 <svg viewBox="0 0 1000 1000" class="map-svg-overlay" preserveAspectRatio="none">
-                    <path class="map-region region-hover-nokron path-nokron" onclick="openOverlay('nokron')" />
-                    <path class="map-region region-hover-sepolcri path-sepolcri" onclick="openOverlay('sepolcri')" />
-                    <path class="map-region region-hover-altus path-altus" onclick="openOverlay('altus')" />
-                    <path class="map-region region-hover-cime path-cime" onclick="openOverlay('cime')" />
-                    <path class="map-region region-hover-forgia path-forgia" onclick="openOverlay('forgia')" />
+                    <path class="map-region region-hover-nokron path-nokron" onclick="openOverlay('nokron')" fill="rgba(0,0,0,0.01)" />
+                    <path class="map-region region-hover-sepolcri path-sepolcri" onclick="openOverlay('sepolcri')" fill="rgba(0,0,0,0.01)" />
+                    <path class="map-region region-hover-altus path-altus" onclick="openOverlay('altus')" fill="rgba(0,0,0,0.01)" />
+                    <path class="map-region region-hover-cime path-cime" onclick="openOverlay('cime')" fill="rgba(0,0,0,0.01)" />
+                    <path class="map-region region-hover-forgia path-forgia" onclick="openOverlay('forgia')" fill="rgba(0,0,0,0.01)" />
                 </svg>
             </div>
         </div>
@@ -349,11 +366,11 @@
                 <div class="map-container">
                     <img src="mappa.jpg" alt="Map" class="map-image">
                     <svg viewBox="0 0 1000 1000" id="lands-between-svg" class="map-svg-overlay" preserveAspectRatio="none">
-                        <path id="nokron" class="map-region path-nokron" onclick="openOverlay('nokron')" />
-                        <path id="sepolcri" class="map-region path-sepolcri" onclick="openOverlay('sepolcri')" />
-                        <path id="altus" class="map-region path-altus" onclick="openOverlay('altus')" />
-                        <path id="cime" class="map-region path-cime" onclick="openOverlay('cime')" />
-                        <path id="forgia" class="map-region path-forgia" onclick="openOverlay('forgia')" />
+                        <path id="nokron" class="map-region path-nokron" onclick="openOverlay('nokron')" fill="rgba(0,0,0,0.01)" />
+                        <path id="sepolcri" class="map-region path-sepolcri" onclick="openOverlay('sepolcri')" fill="rgba(0,0,0,0.01)" />
+                        <path id="altus" class="map-region path-altus" onclick="openOverlay('altus')" fill="rgba(0,0,0,0.01)" />
+                        <path id="cime" class="map-region path-cime" onclick="openOverlay('cime')" fill="rgba(0,0,0,0.01)" />
+                        <path id="forgia" class="map-region path-forgia" onclick="openOverlay('forgia')" fill="rgba(0,0,0,0.01)" />
                     </svg>
                 </div>
             </section>
@@ -820,7 +837,7 @@
             setTimeout(hideLoader, 2500); 
         });
 
-        // --- HUD LOGIC (HP DRAIN NEL TEMPO) ---
+        // --- HUD LOGIC (HP DRAIN NEL TEMPO E FP LENTO) ---
         let hp = 100; let stamina = 100; let fp = 100; let isDead = false;
         const hpFill = document.getElementById('hp-fill');
         const stFill = document.getElementById('stamina-fill');
@@ -839,7 +856,7 @@
             hpFill.style.width = hp + '%';
 
             if (stamina < 100) { stamina = Math.min(100, stamina + 3); stFill.style.width = stamina + '%'; }
-            if (fp < 100) { fp = Math.min(100, fp + 1.5); fpFill.style.width = fp + '%'; }
+            if (fp < 100) { fp = Math.min(100, fp + 0.5); fpFill.style.width = fp + '%'; } // Rallentato il mana
         }, 100);
 
         function consumeFP(amount) { if(!isDead){ fp = Math.max(0, fp - amount); fpFill.style.width = fp + '%'; } }
@@ -873,20 +890,18 @@
             document.getElementById('card-title').innerText = data.title;
             document.getElementById('card-subtitle').innerText = data.subtitle;
             document.getElementById('card-desc').innerText = data.desc;
-            document.getElementById('card-rune').innerHTML = data.rune; // Cambiato a innerHTML per l'SVG
+            document.getElementById('card-rune').innerHTML = data.rune; 
             overlay.style.setProperty('--region-color', data.color);
             overlay.classList.add('active');
         }
 
         function closeOverlay() { overlay.classList.remove('active'); }
 
-        // BIND CLICK SU TUTTE LE MAPPE PER MOBILE
         document.querySelectorAll('.map-region').forEach(region => {
             region.addEventListener('click', (e) => {
                 e.preventDefault();
                 if(region.id) openOverlay(region.id);
             });
-            // Fallback specifico per Safari iOS
             region.addEventListener('touchstart', (e) => {}, {passive: true});
         });
 
