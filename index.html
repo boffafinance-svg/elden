@@ -46,7 +46,7 @@
         .home-btn-container:hover { color: var(--magic-altus); filter: drop-shadow(0 0 15px var(--magic-altus)); opacity: 1; transform: translateX(-50%) scale(1.05); }
         .shattered-rune { width: 60px; height: 60px; }
 
-        /* --- HUD ELDEN RING --- */
+        /* --- HUD ELDEN RING (BARRE FLUIDE) --- */
         .hud-container { position: fixed; top: 40px; left: 40px; z-index: 900; display: flex; flex-direction: column; gap: 12px; pointer-events: none; transform-origin: top left; transition: 0.3s; }
         .stat-bar-bg { background: rgba(15, 15, 15, 0.85); border: 2px solid rgba(197, 160, 89, 0.4); border-radius: 4px; height: 18px; box-shadow: 0 5px 15px rgba(0,0,0,0.9), inset 0 0 5px rgba(0,0,0,1); overflow: hidden; display: flex; justify-content: flex-start; position: relative; }
         .stat-bar-fill { height: 100%; transition: width 0.2s linear; position: relative; background-size: 200% 100%; animation: fluidFlow 3s linear infinite; }
@@ -90,14 +90,16 @@
         .lands-between-wrapper { position: relative; width: 100%; background: #000; overflow: hidden; }
         #star-trail-canvas { position: absolute; top: 0; left: 0; width: 100%; height: 100%; z-index: 0; pointer-events: none; }
 
-        /* --- MAPPA CON CONFINI MAGICI --- */
+        /* --- MAPPA CON CONFINI MAGICI FIXATI PER IOS --- */
         .map-section { padding: 80px 20px 40px; display: flex; flex-direction: column; align-items: center; position: relative; z-index: 5; }
         .section-title { font-family: var(--font-title); font-size: clamp(1.8rem, 5vw, 2.5rem); letter-spacing: 4px; color: var(--text-muted); margin-bottom: 40px; text-align: center; text-shadow: 0 0 10px #000; }
         .map-container { position: relative; width: 100%; max-width: 900px; mask-image: radial-gradient(circle, black 95%, transparent 100%); -webkit-mask-image: radial-gradient(circle, black 95%, transparent 100%); border-radius: 10px; box-shadow: 0 0 50px rgba(0,0,0,0.8); }
         .map-image { display: block; width: 100%; height: auto; filter: sepia(0.2) brightness(0.8) contrast(1.1); border-radius: 10px; }
+        
         .map-svg-overlay { position: absolute; top: 0; left: 0; width: 100%; height: 100%; z-index: 10; pointer-events: none; }
         
-        .map-region { fill: rgba(255,255,255,0.01); stroke: rgba(0,0,0,0); stroke-width: 2; cursor: pointer; transition: all 0.4s cubic-bezier(0.23, 1, 0.32, 1); pointer-events: auto; -webkit-tap-highlight-color: transparent; }
+        /* FIX per Mobile: pointer-events all e fill quasi invisibile creano la hit-area solida */
+        .map-region { fill: rgba(0,0,0,0.01); stroke: rgba(0,0,0,0); stroke-width: 2; cursor: pointer; pointer-events: all; touch-action: manipulation; -webkit-tap-highlight-color: transparent; transition: all 0.4s cubic-bezier(0.23, 1, 0.32, 1); }
         
         /* Tracciati SVG Mappa */
         .path-nokron { d: path('M 80,100 L 250,70 L 380,100 L 470,250 L 460,430 L 350,510 L 200,530 L 70,420 L 50,250 Z'); }
@@ -117,8 +119,11 @@
         .preview-card { background: rgba(10, 10, 9, 0.85); border: 1px solid rgba(255,255,255,0.05); width: 100%; padding: 40px 20px; cursor: pointer; position: relative; overflow: hidden; backdrop-filter: blur(8px); display: flex; flex-direction: column; align-items: center; text-align: center; transition: transform 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275), box-shadow 0.4s; -webkit-tap-highlight-color: transparent; }
         .preview-card:hover { transform: translateY(-10px); box-shadow: 0 15px 40px rgba(0,0,0,1); }
         
-        .preview-rune { font-family: "Segoe UI Symbol", "Apple Symbols", var(--font-title); font-size: clamp(3rem, 6vw, 4rem); margin-bottom: 15px; color: var(--text-muted); transition: 0.4s ease; text-shadow: 0 0 10px rgba(0,0,0,0.8); position: relative; z-index: 2; }
+        .preview-rune { font-family: "Segoe UI Symbol", "Apple Symbols", var(--font-title); font-size: clamp(3rem, 6vw, 4rem); margin-bottom: 15px; color: var(--text-muted); transition: 0.4s ease; text-shadow: 0 0 10px rgba(0,0,0,0.8); position: relative; z-index: 2; line-height: 1; }
+        /* Aggiungo filter per le SVG, siccome text-shadow si applica solo al testo */
         .preview-card:hover .preview-rune { color: inherit; text-shadow: 0 0 20px currentColor; animation: glint 1.5s infinite alternate; }
+        .preview-card:hover .preview-rune svg { filter: drop-shadow(0 0 10px currentColor); }
+        
         .preview-text { display: flex; flex-direction: column; align-items: center; position: relative; z-index: 2; }
         .preview-title { font-family: var(--font-title); font-size: clamp(1.8rem, 5vw, 2.2rem); letter-spacing: 4px; margin-bottom: 5px; color: #fff; }
         .preview-desc { font-size: clamp(1rem, 3vw, 1.15rem); color: var(--text-muted); font-style: italic; }
@@ -168,12 +173,13 @@
         
         .overlay { position: fixed; top: 0; left: 0; width: 100%; height: 100%; background-color: rgba(5, 5, 5, 0.96); z-index: 1002; display: flex; justify-content: center; align-items: center; opacity: 0; visibility: hidden; transition: 0.5s cubic-bezier(0.4, 0, 0.2, 1); backdrop-filter: blur(12px); padding: 20px; }
         .overlay.active { opacity: 1; visibility: visible; }
-        /* Rimosso overflow-y: auto per impedire la comparsa della brutta scrollbar di sistema nei bordi magici */
-        .realm-card { background-color: #0c0c0b; border: 1.5px solid var(--region-color); padding: 50px 40px; max-width: 600px; width: 100%; text-align: center; transform: translateY(40px) scale(0.95); transition: 0.5s cubic-bezier(0.34, 1.56, 0.64, 1); box-shadow: 0 0 60px rgba(0,0,0,1), inset 0 0 25px rgba(0,0,0,0.7); position: relative; }
+        .realm-card { background-color: #0c0c0b; border: 1.5px solid var(--region-color); padding: 50px 40px; max-width: 600px; width: 100%; text-align: center; transform: translateY(40px) scale(0.95); transition: 0.5s cubic-bezier(0.34, 1.56, 0.64, 1); box-shadow: 0 0 60px rgba(0,0,0,1), inset 0 0 25px rgba(0,0,0,0.7); position: relative; max-height: 90vh; overflow-y: auto; }
         .overlay.active .realm-card { transform: translateY(0) scale(1); }
         .realm-card::after { content: ''; position: absolute; top: -5px; left: -5px; right: -5px; bottom: -5px; border: 1px solid rgba(255,255,255,0.05); animation: runicPulse 3s infinite; pointer-events: none; }
         
-        .card-rune { font-family: "Segoe UI Symbol", "Apple Symbols", var(--font-title); font-size: clamp(2.5rem, 5vw, 3.5rem); color: var(--region-color); display: block; text-shadow: 0 0 20px var(--region-color); animation: glint 2s infinite alternate, subtleRotate 8s infinite linear; margin-bottom: 10px; }
+        .card-rune { font-family: "Segoe UI Symbol", "Apple Symbols", var(--font-title); font-size: clamp(2.5rem, 5vw, 3.5rem); color: var(--region-color); display: block; text-shadow: 0 0 20px var(--region-color); animation: glint 2s infinite alternate, subtleRotate 8s infinite linear; margin-bottom: 10px; line-height: 1; }
+        .card-rune svg { filter: drop-shadow(0 0 10px var(--region-color)); }
+        
         .card-title { font-family: var(--font-title); font-size: clamp(1.8rem, 5vw, 2.5rem); color: #fff; letter-spacing: 4px; margin-bottom: 5px; text-shadow: 0 0 15px rgba(255,255,255,0.2); }
         .card-subtitle { font-family: var(--font-title); font-size: clamp(0.9rem, 3vw, 1rem); color: var(--region-color); letter-spacing: 2px; margin-bottom: 25px; }
         .card-desc { font-size: clamp(1rem, 3vw, 1.25rem); color: var(--text-muted); margin-bottom: 40px; line-height: 1.6; }
@@ -207,7 +213,8 @@
         /* --- STILI DELLE PAGINE INTERNE --- */
         .page-wrapper { min-height: 100vh; display: flex; flex-direction: column; align-items: center; padding-bottom: 100px; position: relative; z-index: 10; }
         .region-header { text-align: center; padding: 100px 20px 40px; width: 100%; border-bottom: 1px solid rgba(255,255,255,0.05); background: linear-gradient(180deg, rgba(5,5,5,0.9), transparent); }
-        .region-rune { font-family: "Segoe UI Symbol", "Apple Symbols", var(--font-title); font-size: clamp(3.5rem, 8vw, 5rem); text-shadow: 0 0 30px currentColor; margin-bottom: 10px; animation: glint 3s infinite alternate; }
+        .region-rune { font-family: "Segoe UI Symbol", "Apple Symbols", var(--font-title); font-size: clamp(3.5rem, 8vw, 5rem); text-shadow: 0 0 30px currentColor; margin-bottom: 10px; animation: glint 3s infinite alternate; line-height: 1;}
+        .region-rune svg { filter: drop-shadow(0 0 15px currentColor); }
         .region-title { font-family: var(--font-title); font-size: clamp(2.5rem, 8vw, 4rem); letter-spacing: 6px; color: #fff; margin-bottom: 5px; text-shadow: 0 0 20px rgba(255,255,255,0.2); }
         .region-subtitle { font-family: var(--font-title); font-size: clamp(1rem, 3vw, 1.2rem); letter-spacing: 3px; text-transform: uppercase; }
         
@@ -264,17 +271,6 @@
             .hud-container { transform: scale(0.45); }
             .lang-switch { font-size: 0.8rem; gap: 5px; }
         }
-
-        /* ANIMAZIONI DI BASE */
-        @keyframes pulse { 0% { opacity: 0.5; } 50% { opacity: 1; } 100% { opacity: 0.5; } }
-        @keyframes glint { from { filter: brightness(1) drop-shadow(0 0 10px currentColor); } to { filter: brightness(1.3) drop-shadow(0 0 25px currentColor); } }
-        @keyframes runicPulse { 0% { border-color: rgba(255,255,255,0.05); box-shadow: 0 0 0px var(--region-color); } 50% { border-color: var(--region-color); box-shadow: 0 0 15px var(--region-color); } 100% { border-color: rgba(255,255,255,0.05); box-shadow: 0 0 0px var(--region-color); } }
-        @keyframes subtleRotate { from { transform: rotate(0deg); } to { transform: rotate(360deg); } }
-        @keyframes magicGlowSepolcri { 0% { background-position: 50% 50%; } 100% { background-position: 51% 51%; filter: hue-rotate(5deg); } }
-        @keyframes magicGlowNokron { 0% { background-position: 50% 50%; } 100% { background-position: 49% 49%; filter: hue-rotate(-5deg); } }
-        @keyframes magicGlowAltus { 0% { background-position: 50% 50%; } 100% { background-position: 50.5% 50.5%; filter: brightness(1.1); } }
-        @keyframes magicGlowForgia { 0% { background-position: 50% 50%; } 100% { background-position: 49.5% 49.5%; filter: brightness(1.1) saturate(1.1); } }
-        @keyframes magicGlowCime { 0% { background-position: 50% 50%; } 100% { background-position: 50.5% 49.5%; filter: brightness(1.05) contrast(1.05); } }
     </style>
 </head>
 <body>
@@ -384,15 +380,21 @@
                         <p class="preview-desc" data-i18n="p_alt_d">Il Dominio della Meccanica</p>
                     </div>
                 </div>
+                
                 <div class="preview-card forgia" onclick="openOverlay('forgia')" style="color: var(--magic-forgia);">
-                    <span class="preview-rune">&#x2692;&#xFE0E;</span>
+                    <span class="preview-rune">
+                        <svg viewBox="0 0 24 24" width="1em" height="1em" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" style="display:inline-block; margin-top:-0.1em;"><path d="M4 14l5-5h6l5 5"></path><path d="M2 14h20v4h-20z"></path><path d="M8 18v4h8v-4"></path></svg>
+                    </span>
                     <div class="preview-text">
                         <h3 class="preview-title" data-i18n="p_for_t">La Forgia</h3>
                         <p class="preview-desc" data-i18n="p_for_d">Il Dominio dei Progetti</p>
                     </div>
                 </div>
+                
                 <div class="preview-card cime" onclick="openOverlay('cime')" style="color: var(--magic-cime);">
-                    <span class="preview-rune">&#x1F3D4;&#xFE0E;</span>
+                    <span class="preview-rune">
+                        <svg viewBox="0 0 24 24" width="1em" height="1em" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" style="display:inline-block; margin-top:-0.1em;"><polygon points="12 2 2 22 22 22"></polygon><polyline points="12 2 16 10 12 14 8 10 12 2"></polyline></svg>
+                    </span>
                     <div class="preview-text">
                         <h3 class="preview-title" data-i18n="p_cim_t">Le Cime</h3>
                         <p class="preview-desc" data-i18n="p_cim_d">Il Dominio del Corpo</p>
@@ -534,7 +536,9 @@
     <article id="view-forgia" class="view">
         <div class="page-wrapper">
             <header class="region-header">
-                <div class="region-rune">&#x2692;&#xFE0E;</div>
+                <div class="region-rune">
+                    <svg viewBox="0 0 24 24" width="1em" height="1em" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" style="display:inline-block; margin-top:-0.1em;"><path d="M4 14l5-5h6l5 5"></path><path d="M2 14h20v4h-20z"></path><path d="M8 18v4h8v-4"></path></svg>
+                </div>
                 <h1 class="region-title" data-i18n="p_for_t">La Forgia</h1>
                 <div class="region-subtitle" data-i18n="p_for_d">Il Dominio dei Progetti</div>
             </header>
@@ -573,7 +577,9 @@
     <article id="view-cime" class="view">
         <div class="page-wrapper">
             <header class="region-header">
-                <div class="region-rune">&#x1F3D4;&#xFE0E;</div>
+                <div class="region-rune">
+                    <svg viewBox="0 0 24 24" width="1em" height="1em" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" style="display:inline-block; margin-top:-0.1em;"><polygon points="12 2 2 22 22 22"></polygon><polyline points="12 2 16 10 12 14 8 10 12 2"></polyline></svg>
+                </div>
                 <h1 class="region-title" data-i18n="p_cim_t">Le Cime</h1>
                 <div class="region-subtitle" data-i18n="p_cim_d">Il Dominio del Corpo</div>
             </header>
@@ -758,8 +764,8 @@
             'sepolcri': { title: translations[lang]['p_sep_t'], subtitle: translations[lang]['p_sep_d'], desc: translations[lang]['sep_p1_d'], rune: '♱', color: '#3d8c4c' },
             'nokron': { title: translations[lang]['p_nok_t'], subtitle: translations[lang]['p_nok_d'], desc: translations[lang]['nok_p1_d'], rune: '✧', color: '#4a6fa5' },
             'altus': { title: translations[lang]['p_alt_t'], subtitle: translations[lang]['p_alt_d'], desc: translations[lang]['alt_p1_d'], rune: '❂', color: '#c5a059' },
-            'forgia': { title: translations[lang]['p_for_t'], subtitle: translations[lang]['p_for_d'], desc: translations[lang]['for_p1_d'], rune: '\u2692\uFE0E', color: '#b24c3d' },
-            'cime': { title: translations[lang]['p_cim_t'], subtitle: translations[lang]['p_cim_d'], desc: translations[lang]['cim_p1_d'], rune: '\u1F3D4\uFE0E', color: '#e0e0e0' }
+            'forgia': { title: translations[lang]['p_for_t'], subtitle: translations[lang]['p_for_d'], desc: translations[lang]['for_p1_d'], rune: '<svg viewBox="0 0 24 24" width="1em" height="1em" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" style="display:inline-block; margin-top:-0.1em;"><path d="M4 14l5-5h6l5 5"></path><path d="M2 14h20v4h-20z"></path><path d="M8 18v4h8v-4"></path></svg>', color: '#b24c3d' },
+            'cime': { title: translations[lang]['p_cim_t'], subtitle: translations[lang]['p_cim_d'], desc: translations[lang]['cim_p1_d'], rune: '<svg viewBox="0 0 24 24" width="1em" height="1em" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" style="display:inline-block; margin-top:-0.1em;"><polygon points="12 2 2 22 22 22"></polygon><polyline points="12 2 16 10 12 14 8 10 12 2"></polyline></svg>', color: '#e0e0e0' }
         });
 
         function scrambleText(element, finalString) {
@@ -867,17 +873,21 @@
             document.getElementById('card-title').innerText = data.title;
             document.getElementById('card-subtitle').innerText = data.subtitle;
             document.getElementById('card-desc').innerText = data.desc;
-            document.getElementById('card-rune').innerText = data.rune;
+            document.getElementById('card-rune').innerHTML = data.rune; // Cambiato a innerHTML per l'SVG
             overlay.style.setProperty('--region-color', data.color);
             overlay.classList.add('active');
         }
 
         function closeOverlay() { overlay.classList.remove('active'); }
 
+        // BIND CLICK SU TUTTE LE MAPPE PER MOBILE
         document.querySelectorAll('.map-region').forEach(region => {
-            region.addEventListener('click', () => {
+            region.addEventListener('click', (e) => {
+                e.preventDefault();
                 if(region.id) openOverlay(region.id);
             });
+            // Fallback specifico per Safari iOS
+            region.addEventListener('touchstart', (e) => {}, {passive: true});
         });
 
         function navigateToRealm() {
