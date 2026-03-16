@@ -16,13 +16,11 @@
     <link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@400;600;700&family=Cormorant+Garamond:ital,wght@0,300;0,400;1,300&display=swap" rel="stylesheet">
     <style>
         :root {
-            /* Palette e Variabili */
             --bg-color: #050505;
             --text-main: #d4c8b8;
             --text-muted: #8a8377;
             --region-color: #c5a059;
             
-            /* Sigilli Magici */
             --magic-sepolcri: #3d8c4c;
             --magic-nokron: #4a6fa5;
             --magic-altus: #c5a059;
@@ -37,7 +35,7 @@
         * { box-sizing: border-box; margin: 0; padding: 0; }
         body { background-color: var(--bg-color); color: var(--text-main); font-family: var(--font-text); overflow-x: hidden; scroll-behavior: smooth; }
 
-        /* --- SCHERMATA CARICAMENTO E BOTTONE HOME --- */
+        /* --- LOADER E PULSANTE HOME --- */
         #loader { position: fixed; top: 0; left: 0; width: 100%; height: 100vh; background: #000; z-index: 9999; display: flex; justify-content: center; align-items: center; transition: opacity 1s ease, visibility 1s ease; }
         .loader-rune { width: 150px; height: 150px; color: var(--magic-altus); filter: drop-shadow(0 0 15px var(--magic-altus)); animation: pulse-gold 2s infinite alternate; }
         @keyframes pulse-gold { from { filter: drop-shadow(0 0 5px var(--magic-altus)) brightness(0.8); transform: scale(0.95); } to { filter: drop-shadow(0 0 30px var(--magic-altus)) brightness(1.3); transform: scale(1.05); } }
@@ -46,7 +44,7 @@
         .home-btn-container:hover { color: var(--magic-altus); filter: drop-shadow(0 0 15px var(--magic-altus)); opacity: 1; transform: translateX(-50%) scale(1.05); }
         .shattered-rune { width: 60px; height: 60px; }
 
-        /* --- HUD ELDEN RING (BARRE FLUIDE) --- */
+        /* --- HUD --- */
         .hud-container { position: fixed; top: 40px; left: 40px; z-index: 900; display: flex; flex-direction: column; gap: 12px; pointer-events: none; transform-origin: top left; transition: 0.3s; }
         .stat-bar-bg { background: rgba(15, 15, 15, 0.85); border: 2px solid rgba(197, 160, 89, 0.4); border-radius: 4px; height: 18px; box-shadow: 0 5px 15px rgba(0,0,0,0.9), inset 0 0 5px rgba(0,0,0,1); overflow: hidden; display: flex; justify-content: flex-start; position: relative; }
         .stat-bar-fill { height: 100%; transition: width 0.2s linear; position: relative; background-size: 200% 100%; animation: fluidFlow 3s linear infinite; }
@@ -68,7 +66,7 @@
 
         .scrambling { color: var(--magic-altus) !important; text-shadow: 0 0 15px var(--magic-altus), 0 0 30px var(--magic-altus) !important; font-family: var(--font-runic), var(--font-title), serif !important; transition: none !important; }
 
-        /* --- SISTEMA SPA E SFONDI --- */
+        /* --- SISTEMA SPA --- */
         .view { display: none; opacity: 0; transition: opacity 0.8s cubic-bezier(0.4, 0, 0.2, 1); min-height: 100vh; width: 100%; position: relative; }
         .view.active { display: block; opacity: 1; }
 
@@ -90,14 +88,15 @@
         .lands-between-wrapper { position: relative; width: 100%; background: #000; overflow: hidden; }
         #star-trail-canvas { position: absolute; top: 0; left: 0; width: 100%; height: 100%; z-index: 0; pointer-events: none; }
 
-        /* --- MAPPA CON CONFINI MAGICI FIXATI PER IOS --- */
+        /* --- MAPPA --- */
         .map-section { padding: 80px 20px 40px; display: flex; flex-direction: column; align-items: center; position: relative; z-index: 5; }
         .section-title { font-family: var(--font-title); font-size: clamp(1.8rem, 5vw, 2.5rem); letter-spacing: 4px; color: var(--text-muted); margin-bottom: 40px; text-align: center; text-shadow: 0 0 10px #000; }
         .map-container { position: relative; width: 100%; max-width: 900px; mask-image: radial-gradient(circle, black 95%, transparent 100%); -webkit-mask-image: radial-gradient(circle, black 95%, transparent 100%); border-radius: 10px; box-shadow: 0 0 50px rgba(0,0,0,0.8); }
         .map-image { display: block; width: 100%; height: auto; filter: sepia(0.2) brightness(0.8) contrast(1.1); border-radius: 10px; }
         
+        /* SVG per Desktop */
         .map-svg-overlay { position: absolute; top: 0; left: 0; width: 100%; height: 100%; z-index: 10; pointer-events: none; }
-        .map-region { fill: rgba(0,0,0,0.01); stroke: rgba(0,0,0,0); stroke-width: 2; cursor: pointer; pointer-events: all; touch-action: manipulation; -webkit-tap-highlight-color: transparent; transition: all 0.4s cubic-bezier(0.23, 1, 0.32, 1); }
+        .map-region { fill: rgba(255,255,255,0.01); stroke: rgba(0,0,0,0); stroke-width: 2; cursor: pointer; pointer-events: all; transition: all 0.4s cubic-bezier(0.23, 1, 0.32, 1); }
         
         .path-nokron { d: path('M 80,100 L 250,70 L 380,100 L 470,250 L 460,430 L 350,510 L 200,530 L 70,420 L 50,250 Z'); }
         .path-sepolcri { d: path('M 70,550 L 180,550 L 250,530 L 350,520 L 440,560 L 520,680 L 520,780 L 450,900 L 250,940 L 80,900 L 50,750 Z'); }
@@ -111,7 +110,19 @@
         .region-hover-forgia:hover, #forgia:hover { fill: rgba(178, 76, 61, 0.3); stroke: var(--magic-forgia); filter: drop-shadow(0 0 15px var(--magic-forgia)); }
         .region-hover-cime:hover, #cime:hover { fill: rgba(224, 224, 224, 0.3); stroke: var(--magic-cime); filter: drop-shadow(0 0 15px var(--magic-cime)); }
 
-        /* --- PREVIEW CARDS MAGICHE (CON EFFETTI RIPRISTINATI) --- */
+        /* --- I PINS PER MOBILE (Fall-back invincibile per touch) --- */
+        .mobile-map-pins { display: none; position: absolute; top: 0; left: 0; width: 100%; height: 100%; z-index: 20; }
+        .map-pin { position: absolute; transform: translate(-50%, -50%); font-family: "Segoe UI Symbol", "Apple Symbols", var(--font-title); font-size: 2rem; cursor: pointer; background: rgba(0,0,0,0.6); border-radius: 50%; width: 55px; height: 55px; display: flex; justify-content: center; align-items: center; border: 1px solid currentColor; box-shadow: 0 0 15px currentColor; animation: pin-pulse 2s infinite alternate; backdrop-filter: blur(4px); -webkit-tap-highlight-color: transparent; line-height: 1; }
+        .map-pin svg { filter: drop-shadow(0 0 5px currentColor); }
+        @keyframes pin-pulse { from { box-shadow: 0 0 5px currentColor; transform: translate(-50%, -50%) scale(0.95); } to { box-shadow: 0 0 20px currentColor; transform: translate(-50%, -50%) scale(1.05); } }
+        
+        .pin-nokron { top: 28%; left: 24%; color: var(--magic-nokron); }
+        .pin-sepolcri { top: 75%; left: 25%; color: var(--magic-sepolcri); }
+        .pin-altus { top: 40%; left: 55%; color: var(--magic-altus); }
+        .pin-cime { top: 25%; left: 80%; color: var(--magic-cime); }
+        .pin-forgia { top: 70%; left: 75%; color: var(--magic-forgia); }
+
+        /* --- PREVIEW CARDS MAGICHE --- */
         .preview-section { padding: 40px 20px 100px; max-width: 800px; margin: 0 auto; display: flex; flex-direction: column; gap: 30px; align-items: center; width: 100%; position: relative; z-index: 5; }
         .preview-card { background: rgba(10, 10, 9, 0.85); border: 1px solid rgba(255,255,255,0.05); width: 100%; padding: 40px 20px; cursor: pointer; position: relative; overflow: hidden; backdrop-filter: blur(8px); display: flex; flex-direction: column; align-items: center; text-align: center; transition: transform 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275), box-shadow 0.4s; -webkit-tap-highlight-color: transparent; }
         .preview-card:hover { transform: translateY(-10px); box-shadow: 0 15px 40px rgba(0,0,0,1); }
@@ -162,11 +173,12 @@
         .preview-card.cime:hover::before { transform: translateY(0); filter: drop-shadow(0 -5px 15px #fff); animation: cime-breath 3s infinite alternate ease-in-out; }
         @keyframes cime-breath { from { transform: translateY(10px); opacity: 0.7; } to { transform: translateY(-5px); opacity: 1; } }
 
-        /* --- OVERLAY DELLA MAPPA / LORE --- */
+        /* --- MODAL MAPPA GLOBALE --- */
         .map-modal { position: fixed; top: 0; left: 0; width: 100%; height: 100%; background-color: rgba(5, 5, 5, 0.98); z-index: 1001; display: flex; justify-content: center; align-items: center; opacity: 0; visibility: hidden; transition: 0.4s ease; backdrop-filter: blur(15px); }
         .map-modal.active { opacity: 1; visibility: visible; }
         .map-modal-content { width: 95%; max-width: 900px; position: relative; display: flex; flex-direction: column; align-items: center; }
         
+        /* --- OVERLAY LORE --- */
         .overlay { position: fixed; top: 0; left: 0; width: 100%; height: 100%; background-color: rgba(5, 5, 5, 0.96); z-index: 1002; display: flex; justify-content: center; align-items: center; opacity: 0; visibility: hidden; transition: 0.5s cubic-bezier(0.4, 0, 0.2, 1); backdrop-filter: blur(12px); padding: 20px; }
         .overlay.active { opacity: 1; visibility: visible; }
         .realm-card { background-color: #0c0c0b; border: 1.5px solid var(--region-color); padding: 50px 40px; max-width: 600px; width: 100%; text-align: center; transform: translateY(40px) scale(0.95); transition: 0.5s cubic-bezier(0.34, 1.56, 0.64, 1); box-shadow: 0 0 60px rgba(0,0,0,1), inset 0 0 25px rgba(0,0,0,0.7); position: relative; }
@@ -175,7 +187,6 @@
         
         .card-rune { font-family: "Segoe UI Symbol", "Apple Symbols", var(--font-title); font-size: clamp(2.5rem, 5vw, 3.5rem); color: var(--region-color); display: block; text-shadow: 0 0 20px var(--region-color); animation: glint 2s infinite alternate, subtleRotate 8s infinite linear; margin-bottom: 10px; line-height: 1; }
         .card-rune svg { filter: drop-shadow(0 0 10px var(--region-color)); }
-        
         .card-title { font-family: var(--font-title); font-size: clamp(1.8rem, 5vw, 2.5rem); color: #fff; letter-spacing: 4px; margin-bottom: 5px; text-shadow: 0 0 15px rgba(255,255,255,0.2); }
         .card-subtitle { font-family: var(--font-title); font-size: clamp(0.9rem, 3vw, 1rem); color: var(--region-color); letter-spacing: 2px; margin-bottom: 25px; }
         .card-desc { font-size: clamp(1rem, 3vw, 1.25rem); color: var(--text-muted); margin-bottom: 40px; line-height: 1.6; }
@@ -185,7 +196,7 @@
         .close-overlay { position: absolute; top: 15px; right: 25px; background: none; border: none; color: var(--text-muted); font-size: 2rem; cursor: pointer; transition: 0.3s; z-index: 10; }
         .close-overlay:hover { color: var(--region-color); }
 
-        /* --- SCHERMATA DELLA MORTE (HP FINITI) --- */
+        /* --- SCHERMATA DELLA MORTE --- */
         .death-screen { position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0, 0, 0, 0.95); z-index: 10000; display: flex; flex-direction: column; justify-content: center; align-items: center; opacity: 0; visibility: hidden; transition: opacity 3s ease; }
         .death-screen.active { opacity: 1; visibility: visible; }
         .death-text { font-family: var(--font-title); font-size: clamp(3rem, 10vw, 8rem); color: #8b0000; letter-spacing: 15px; text-shadow: 0 0 30px rgba(139,0,0,0.8); margin-bottom: 40px; transform: scale(0.9); transition: transform 5s ease; text-align: center; line-height: 1.2; }
@@ -193,7 +204,7 @@
         .respawn-btn { background: transparent; border: 1px solid #8b0000; color: #8b0000; padding: 15px 40px; font-family: var(--font-title); font-size: 1.2rem; letter-spacing: 3px; cursor: pointer; transition: 0.4s; text-transform: uppercase; }
         .respawn-btn:hover { background: #8b0000; color: #000; box-shadow: 0 0 20px #8b0000; }
 
-        /* --- STILI DELLE PAGINE INTERNE --- */
+        /* --- STILI PAGINE INTERNE --- */
         .page-wrapper { min-height: 100vh; display: flex; flex-direction: column; align-items: center; padding-bottom: 100px; position: relative; z-index: 10; }
         .region-header { text-align: center; padding: 100px 20px 40px; width: 100%; border-bottom: 1px solid rgba(255,255,255,0.05); background: linear-gradient(180deg, rgba(5,5,5,0.9), transparent); }
         .region-rune { font-family: "Segoe UI Symbol", "Apple Symbols", var(--font-title); font-size: clamp(3.5rem, 8vw, 5rem); text-shadow: 0 0 30px currentColor; margin-bottom: 10px; animation: glint 3s infinite alternate; line-height: 1;}
@@ -207,11 +218,9 @@
         .project-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)); gap: 40px; text-align: left; }
         .project-card-inner { background: rgba(10, 10, 9, 0.85); border: 1px solid rgba(255,255,255,0.1); display: flex; flex-direction: column; transition: 0.4s; backdrop-filter: blur(8px); position: relative; overflow: hidden; box-shadow: 0 10px 30px rgba(0,0,0,0.8); height: 100%; }
         .project-card-inner:hover { transform: translateY(-10px); border-color: currentColor; box-shadow: 0 15px 40px rgba(0,0,0,0.9), 0 0 20px currentColor; }
-        
         .card-image-wrapper { width: 100%; height: 200px; overflow: hidden; position: relative; border-bottom: 1px solid rgba(255,255,255,0.05); }
         .card-image-wrapper img { width: 100%; height: 100%; object-fit: cover; filter: sepia(0.4) brightness(0.6) contrast(1.2); transition: 0.5s ease; }
         .project-card-inner:hover .card-image-wrapper img { transform: scale(1.08); filter: sepia(0.2) brightness(0.9) contrast(1.1); }
-        
         .card-overlay-btn { position: absolute; top: 50%; left: 50%; transform: translate(-50%, -50%); background: rgba(0,0,0,0.8); border: 1px solid currentColor; color: #fff; font-family: var(--font-title); padding: 10px 25px; letter-spacing: 2px; text-transform: uppercase; font-size: 0.9rem; opacity: 0; transition: 0.3s ease; text-decoration: none; }
         .project-card-inner:hover .card-overlay-btn { opacity: 1; }
         .card-overlay-btn:hover { background: currentColor; color: #000; box-shadow: 0 0 15px currentColor; }
@@ -234,7 +243,7 @@
         #view-forgia .region-rune, #view-forgia .region-subtitle, #view-forgia .project-card-inner, #view-forgia .card-tags, #view-forgia .card-overlay-btn { color: var(--magic-forgia); }
         #view-cime .region-rune, #view-cime .region-subtitle, #view-cime .project-card-inner, #view-cime .card-tags, #view-cime .card-overlay-btn { color: var(--magic-cime); }
 
-        /* RESPONSIVE AGGIUNTIVO E MAGIE SEMPRE ATTIVE SU MOBILE */
+        /* ================= RESPONSIVE E FIX MOBILE ================= */
         @media (max-width: 768px) {
             .lang-switch { top: 15px; right: 15px; padding: 5px 10px; font-size: 0.9rem; }
             .hud-container { top: 15px; left: 15px; transform: scale(0.55); }
@@ -246,13 +255,17 @@
             .realm-card { padding: 30px 20px; }
             .close-overlay { top: 10px; right: 15px; font-size: 1.5rem; }
             .project-grid { grid-template-columns: 1fr; }
+
+            /* Nasconde l'SVG della mappa che ruba tocchi e usa i Pin posizionati in assoluto */
+            .map-svg-overlay { display: none !important; pointer-events: none !important; }
+            .mobile-map-pins { display: block; position: absolute; top: 0; left: 0; width: 100%; height: 100%; z-index: 20; }
         }
         @media (max-width: 480px) {
             .hud-container { transform: scale(0.45); }
             .lang-switch { font-size: 0.8rem; gap: 5px; }
         }
 
-        /* SU DISPOSITIVI TOUCH FORZO LE ANIMAZIONI MAGIA A ESSERE SEMPRE ATTIVE */
+        /* MEDIA HOVER: FORZA EFFETTI SUI TELEFONI PER LE CARD PREVIEW */
         @media (hover: none) and (pointer: coarse) {
             .preview-card.sepolcri::before { opacity: 0.6; filter: drop-shadow(0 0 10px var(--magic-sepolcri)); animation: creep-vines 4s linear infinite; }
             .preview-card.sepolcri .preview-rune { color: var(--magic-sepolcri); text-shadow: 0 0 20px var(--magic-sepolcri); animation: glint 1.5s infinite alternate; }
@@ -277,17 +290,6 @@
             .preview-card.cime .preview-rune { color: var(--magic-cime); text-shadow: 0 0 20px var(--magic-cime); animation: glint 1.5s infinite alternate; }
             .preview-card.cime { border-bottom: 4px solid var(--magic-cime); box-shadow: inset 0 -30px 40px rgba(224,224,224,0.15), 0 10px 30px rgba(0,0,0,0.8); }
         }
-
-        /* ANIMAZIONI DI BASE */
-        @keyframes pulse { 0% { opacity: 0.5; } 50% { opacity: 1; } 100% { opacity: 0.5; } }
-        @keyframes glint { from { filter: brightness(1) drop-shadow(0 0 10px currentColor); } to { filter: brightness(1.3) drop-shadow(0 0 25px currentColor); } }
-        @keyframes runicPulse { 0% { border-color: rgba(255,255,255,0.05); box-shadow: 0 0 0px var(--region-color); } 50% { border-color: var(--region-color); box-shadow: 0 0 15px var(--region-color); } 100% { border-color: rgba(255,255,255,0.05); box-shadow: 0 0 0px var(--region-color); } }
-        @keyframes subtleRotate { from { transform: rotate(0deg); } to { transform: rotate(360deg); } }
-        @keyframes magicGlowSepolcri { 0% { background-position: 50% 50%; } 100% { background-position: 51% 51%; filter: hue-rotate(5deg); } }
-        @keyframes magicGlowNokron { 0% { background-position: 50% 50%; } 100% { background-position: 49% 49%; filter: hue-rotate(-5deg); } }
-        @keyframes magicGlowAltus { 0% { background-position: 50% 50%; } 100% { background-position: 50.5% 50.5%; filter: brightness(1.1); } }
-        @keyframes magicGlowForgia { 0% { background-position: 50% 50%; } 100% { background-position: 49.5% 49.5%; filter: brightness(1.1) saturate(1.1); } }
-        @keyframes magicGlowCime { 0% { background-position: 50% 50%; } 100% { background-position: 50.5% 49.5%; filter: brightness(1.05) contrast(1.05); } }
     </style>
 </head>
 <body>
@@ -340,12 +342,19 @@
             <div class="map-container">
                 <img src="mappa.jpg" alt="Map" class="map-image">
                 <svg viewBox="0 0 1000 1000" class="map-svg-overlay" preserveAspectRatio="none">
-                    <path class="map-region region-hover-nokron path-nokron" onclick="openOverlay('nokron')" fill="rgba(0,0,0,0.01)" />
-                    <path class="map-region region-hover-sepolcri path-sepolcri" onclick="openOverlay('sepolcri')" fill="rgba(0,0,0,0.01)" />
-                    <path class="map-region region-hover-altus path-altus" onclick="openOverlay('altus')" fill="rgba(0,0,0,0.01)" />
-                    <path class="map-region region-hover-cime path-cime" onclick="openOverlay('cime')" fill="rgba(0,0,0,0.01)" />
-                    <path class="map-region region-hover-forgia path-forgia" onclick="openOverlay('forgia')" fill="rgba(0,0,0,0.01)" />
+                    <path class="map-region region-hover-nokron path-nokron" onclick="openOverlay('nokron')" />
+                    <path class="map-region region-hover-sepolcri path-sepolcri" onclick="openOverlay('sepolcri')" />
+                    <path class="map-region region-hover-altus path-altus" onclick="openOverlay('altus')" />
+                    <path class="map-region region-hover-cime path-cime" onclick="openOverlay('cime')" />
+                    <path class="map-region region-hover-forgia path-forgia" onclick="openOverlay('forgia')" />
                 </svg>
+                <div class="mobile-map-pins">
+                    <div class="map-pin pin-nokron" onclick="openOverlay('nokron')">✧</div>
+                    <div class="map-pin pin-sepolcri" onclick="openOverlay('sepolcri')">♱</div>
+                    <div class="map-pin pin-altus" onclick="openOverlay('altus')">❂</div>
+                    <div class="map-pin pin-cime" onclick="openOverlay('cime')"><svg viewBox="0 0 24 24" width="1em" height="1em" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><polygon points="12 2 2 22 22 22"></polygon><polyline points="12 2 16 10 12 14 8 10 12 2"></polyline></svg></div>
+                    <div class="map-pin pin-forgia" onclick="openOverlay('forgia')"><svg viewBox="0 0 24 24" width="1em" height="1em" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="M4 14l5-5h6l5 5"></path><path d="M2 14h20v4h-20z"></path><path d="M8 18v4h8v-4"></path></svg></div>
+                </div>
             </div>
         </div>
     </div>
@@ -366,12 +375,19 @@
                 <div class="map-container">
                     <img src="mappa.jpg" alt="Map" class="map-image">
                     <svg viewBox="0 0 1000 1000" id="lands-between-svg" class="map-svg-overlay" preserveAspectRatio="none">
-                        <path id="nokron" class="map-region path-nokron" onclick="openOverlay('nokron')" fill="rgba(0,0,0,0.01)" />
-                        <path id="sepolcri" class="map-region path-sepolcri" onclick="openOverlay('sepolcri')" fill="rgba(0,0,0,0.01)" />
-                        <path id="altus" class="map-region path-altus" onclick="openOverlay('altus')" fill="rgba(0,0,0,0.01)" />
-                        <path id="cime" class="map-region path-cime" onclick="openOverlay('cime')" fill="rgba(0,0,0,0.01)" />
-                        <path id="forgia" class="map-region path-forgia" onclick="openOverlay('forgia')" fill="rgba(0,0,0,0.01)" />
+                        <path id="nokron" class="map-region path-nokron" onclick="openOverlay('nokron')" />
+                        <path id="sepolcri" class="map-region path-sepolcri" onclick="openOverlay('sepolcri')" />
+                        <path id="altus" class="map-region path-altus" onclick="openOverlay('altus')" />
+                        <path id="cime" class="map-region path-cime" onclick="openOverlay('cime')" />
+                        <path id="forgia" class="map-region path-forgia" onclick="openOverlay('forgia')" />
                     </svg>
+                    <div class="mobile-map-pins">
+                        <div class="map-pin pin-nokron" onclick="openOverlay('nokron')">✧</div>
+                        <div class="map-pin pin-sepolcri" onclick="openOverlay('sepolcri')">♱</div>
+                        <div class="map-pin pin-altus" onclick="openOverlay('altus')">❂</div>
+                        <div class="map-pin pin-cime" onclick="openOverlay('cime')"><svg viewBox="0 0 24 24" width="1em" height="1em" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><polygon points="12 2 2 22 22 22"></polygon><polyline points="12 2 16 10 12 14 8 10 12 2"></polyline></svg></div>
+                        <div class="map-pin pin-forgia" onclick="openOverlay('forgia')"><svg viewBox="0 0 24 24" width="1em" height="1em" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="M4 14l5-5h6l5 5"></path><path d="M2 14h20v4h-20z"></path><path d="M8 18v4h8v-4"></path></svg></div>
+                    </div>
                 </div>
             </section>
 
@@ -849,14 +865,11 @@
             if(isDead) return;
 
             hp -= 100 / (5 * 60 * 10); 
-            if (hp <= 0) {
-                hp = 0;
-                triggerDeath();
-            }
+            if (hp <= 0) { hp = 0; triggerDeath(); }
             hpFill.style.width = hp + '%';
 
             if (stamina < 100) { stamina = Math.min(100, stamina + 3); stFill.style.width = stamina + '%'; }
-            if (fp < 100) { fp = Math.min(100, fp + 0.5); fpFill.style.width = fp + '%'; } // Rallentato il mana
+            if (fp < 100) { fp = Math.min(100, fp + 0.5); fpFill.style.width = fp + '%'; } 
         }, 100);
 
         function consumeFP(amount) { if(!isDead){ fp = Math.max(0, fp - amount); fpFill.style.width = fp + '%'; } }
@@ -897,12 +910,20 @@
 
         function closeOverlay() { overlay.classList.remove('active'); }
 
+        // Mappa Mobile Overlay Pins cliccabili (sostituiscono svg su mobile)
+        document.querySelectorAll('.map-pin').forEach(pin => {
+            pin.addEventListener('click', (e) => {
+                e.preventDefault();
+                // l'onclick di HTML "openOverlay" scatterà qui
+            });
+        });
+        
+        // Mappa Desktop cliccabile
         document.querySelectorAll('.map-region').forEach(region => {
             region.addEventListener('click', (e) => {
                 e.preventDefault();
                 if(region.id) openOverlay(region.id);
             });
-            region.addEventListener('touchstart', (e) => {}, {passive: true});
         });
 
         function navigateToRealm() {
