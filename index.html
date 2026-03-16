@@ -1,0 +1,825 @@
+<!DOCTYPE html>
+<html lang="it">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Gabriele D. Boffa | I Domini</title>
+    <link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@400;600;700&family=Cormorant+Garamond:ital,wght@0,300;0,400;1,300&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            /* Palette e Variabili Globale */
+            --bg-color: #050505;
+            --text-main: #d4c8b8;
+            --text-muted: #8a8377;
+            --region-color: #c5a059;
+            
+            /* Colori dei Sigilli Magici dei Regni */
+            --magic-sepolcri: #3d8c4c;
+            --magic-nokron: #4a6fa5;
+            --magic-altus: #c5a059;
+            --magic-forgia: #b24c3d;
+            --magic-cime: #e0e0e0;
+
+            --font-title: 'Cinzel', serif;
+            --font-text: 'Cormorant Garamond', serif;
+            --font-runic: 'Segoe UI Symbol', 'Noto Sans Runic', sans-serif;
+        }
+
+        * { box-sizing: border-box; margin: 0; padding: 0; }
+        body { background-color: var(--bg-color); color: var(--text-main); font-family: var(--font-text); overflow-x: hidden; scroll-behavior: smooth; }
+
+        /* --- SCHERMATA DI CARICAMENTO (RUNA) --- */
+        #loader { position: fixed; top: 0; left: 0; width: 100%; height: 100vh; background: #000; z-index: 9999; display: flex; justify-content: center; align-items: center; transition: opacity 1s ease, visibility 1s ease; }
+        .loader-rune { width: 150px; height: 150px; color: var(--magic-altus); filter: drop-shadow(0 0 15px var(--magic-altus)); animation: pulse-gold 2s infinite alternate; }
+        @keyframes pulse-gold { from { filter: drop-shadow(0 0 5px var(--magic-altus)) brightness(0.8); transform: scale(0.95); } to { filter: drop-shadow(0 0 30px var(--magic-altus)) brightness(1.3); transform: scale(1.05); } }
+
+        /* --- PULSANTE HOME (RUNA FRASTAGLIATA) --- */
+        .home-btn-container { position: fixed; top: 30px; left: 50%; transform: translateX(-50%); z-index: 1000; cursor: pointer; color: var(--text-muted); transition: 0.3s; opacity: 0.8; }
+        .home-btn-container:hover { color: var(--magic-altus); filter: drop-shadow(0 0 15px var(--magic-altus)); opacity: 1; transform: translateX(-50%) scale(1.05); }
+        .shattered-rune { width: 60px; height: 60px; }
+
+        /* --- HUD ELDEN RING (BARRE FLUIDE) --- */
+        .hud-container { position: fixed; top: 40px; left: 40px; z-index: 900; display: flex; flex-direction: column; gap: 12px; pointer-events: none; }
+        .stat-bar-bg { background: rgba(15, 15, 15, 0.85); border: 2px solid rgba(197, 160, 89, 0.4); border-radius: 4px; height: 18px; box-shadow: 0 5px 15px rgba(0,0,0,0.9), inset 0 0 5px rgba(0,0,0,1); overflow: hidden; display: flex; justify-content: flex-start; position: relative; }
+        .stat-bar-fill { height: 100%; transition: width 0.2s linear; position: relative; background-size: 200% 100%; animation: fluidFlow 3s linear infinite; }
+        .stat-bar-fill::after { content: ''; position: absolute; top: 0; left: 0; right: 0; height: 35%; background: linear-gradient(180deg, rgba(255,255,255,0.25) 0%, rgba(255,255,255,0) 100%); }
+        
+        @keyframes fluidFlow { 0% { background-position: 100% 0; } 100% { background-position: 0 0; } }
+
+        .hp-bg { width: 400px; } .fp-bg { width: 260px; } .st-bg { width: 320px; }
+        .hp-fill { width: 100%; background-image: linear-gradient(90deg, #600000, #ff1a1a, #600000, #ff1a1a, #600000); box-shadow: inset 0 -3px 5px rgba(0,0,0,0.5), 0 0 15px rgba(255, 42, 42, 0.4); }
+        .fp-fill { width: 100%; background-image: linear-gradient(90deg, #0f4c75, #2eb5ff, #0f4c75, #2eb5ff, #0f4c75); box-shadow: inset 0 -3px 5px rgba(0,0,0,0.5), 0 0 15px rgba(50, 130, 184, 0.4); }
+        .st-fill { width: 100%; background-image: linear-gradient(90deg, #123324, #36b579, #123324, #36b579, #123324); box-shadow: inset 0 -3px 5px rgba(0,0,0,0.5), 0 0 15px rgba(45, 106, 79, 0.4); }
+        @media (max-width: 768px) { .hud-container { top: 20px; left: 20px; transform: scale(0.6); transform-origin: top left; } .home-btn-container { top: 15px; } .shattered-rune { width: 45px; height: 45px; } }
+
+        /* --- SWITCHER LINGUA --- */
+        .lang-switch { position: fixed; top: 40px; right: 40px; z-index: 1000; font-family: var(--font-title); font-size: 1.2rem; display: flex; gap: 10px; align-items: center; background: rgba(0,0,0,0.5); padding: 5px 15px; border: 1px solid rgba(197, 160, 89, 0.3); border-radius: 4px; backdrop-filter: blur(5px); }
+        .lang-btn { background: none; border: none; color: var(--text-muted); cursor: pointer; font-family: inherit; font-size: inherit; transition: 0.3s; letter-spacing: 2px; }
+        .lang-btn:hover { color: #fff; text-shadow: 0 0 10px #fff; }
+        .lang-btn.active { color: var(--magic-altus); text-shadow: 0 0 10px var(--magic-altus); pointer-events: none; }
+        .map-nav-btn { color: var(--magic-cime); text-shadow: 0 0 5px var(--magic-cime); }
+        .map-nav-btn:hover { color: #fff; text-shadow: 0 0 15px #fff; }
+        @media (max-width: 768px) { .lang-switch { top: 20px; right: 20px; font-size: 0.9rem; } }
+
+        .scrambling { color: var(--magic-altus) !important; text-shadow: 0 0 15px var(--magic-altus), 0 0 30px var(--magic-altus) !important; font-family: var(--font-runic), var(--font-title), serif !important; transition: none !important; }
+
+        /* --- SISTEMA SPA --- */
+        .view { display: none; opacity: 0; transition: opacity 0.8s cubic-bezier(0.4, 0, 0.2, 1); min-height: 100vh; width: 100%; position: relative; }
+        .view.active { display: block; opacity: 1; }
+
+        /* --- SFONDI GENERATI --- */
+        #view-sepolcri { background: linear-gradient(rgba(5,5,5,0.8), rgba(5,5,5,0.8)), url('https://images.unsplash.com/photo-1448375240586-882707db888b?auto=format&fit=crop&q=80&w=1920') no-repeat center/cover; background-attachment: fixed; animation: magicGlowSepolcri 10s infinite alternate; }
+        #view-nokron { background: linear-gradient(rgba(5,5,5,0.85), rgba(5,5,5,0.85)), url('https://images.unsplash.com/photo-1506318137071-a8e063b4bec0?auto=format&fit=crop&q=80&w=1920') no-repeat center/cover; background-attachment: fixed; animation: magicGlowNokron 10s infinite alternate; }
+        #view-altus { background: linear-gradient(rgba(5,5,5,0.8), rgba(5,5,5,0.8)), url('https://images.unsplash.com/photo-1441974231531-c6227db76b6e?auto=format&fit=crop&q=80&w=1920') no-repeat center/cover; background-attachment: fixed; animation: magicGlowAltus 10s infinite alternate; }
+        #view-forgia { background: linear-gradient(rgba(5,5,5,0.85), rgba(5,5,5,0.85)), url('https://images.unsplash.com/photo-1509114397022-ed747cca3f65?auto=format&fit=crop&q=80&w=1920') no-repeat center/cover; background-attachment: fixed; animation: magicGlowForgia 10s infinite alternate; }
+        #view-cime { background: linear-gradient(rgba(5,5,5,0.8), rgba(5,5,5,0.8)), url('https://images.unsplash.com/photo-1454496522488-7a8e488e8606?auto=format&fit=crop&q=80&w=1920') no-repeat center/cover; background-attachment: fixed; animation: magicGlowCime 10s infinite alternate; }
+
+        /* --- HERO --- */
+        .hero { height: 100vh; display: flex; flex-direction: column; justify-content: center; align-items: center; text-align: center; background: radial-gradient(circle at center, transparent 0%, var(--bg-color) 90%), url('https://images.unsplash.com/photo-1534447677768-be436bb09401?auto=format&fit=crop&q=80&w=1920') no-repeat center/cover; position: relative; z-index: 5; }
+        .title { font-family: var(--font-title); font-size: clamp(2rem, 6vw, 4.5rem); letter-spacing: 6px; color: var(--magic-altus); text-shadow: 0 0 30px rgba(197, 160, 89, 0.4); margin-bottom: 0; }
+        .runic-name { font-family: var(--font-runic); font-size: clamp(2rem, 5vw, 3rem); letter-spacing: 15px; color: var(--magic-altus); animation: runic-glow 3s infinite alternate; margin-top: 10px; margin-bottom: 30px; }
+        @keyframes runic-glow { from { text-shadow: 0 0 5px var(--magic-altus), 0 0 10px var(--magic-altus); opacity: 0.8; } to { text-shadow: 0 0 20px var(--magic-altus), 0 0 40px var(--magic-altus), 0 0 60px #fff; opacity: 1; } }
+        .manifesto { font-size: 1.5rem; font-style: italic; color: #fff; text-shadow: 0 2px 10px #000, 0 0 20px #000; background: rgba(0,0,0,0.5); padding: 15px 30px; border-radius: 4px; border-left: 2px solid var(--magic-altus); border-right: 2px solid var(--magic-altus); backdrop-filter: blur(4px); box-shadow: 0 10px 30px rgba(0,0,0,0.8); }
+        .scroll-down { position: absolute; bottom: 40px; color: var(--magic-altus); font-family: var(--font-title); text-decoration: none; letter-spacing: 2px; animation: pulse 2s infinite; text-shadow: 0 0 10px #000; }
+
+        /* ================= IL MOTORE STAR TRAIL (VOLTA CELESTE) ================= */
+        .lands-between-wrapper { position: relative; width: 100%; background: #000; overflow: hidden; }
+        #star-trail-canvas { position: absolute; top: 0; left: 0; width: 100%; height: 100%; z-index: 0; pointer-events: none; }
+
+        /* --- MAPPA CON CONFINI MAGICI --- */
+        .map-section { padding: 80px 20px 40px; display: flex; flex-direction: column; align-items: center; position: relative; z-index: 5; }
+        .section-title { font-family: var(--font-title); font-size: 2.5rem; letter-spacing: 4px; color: var(--text-muted); margin-bottom: 40px; text-align: center; text-shadow: 0 0 10px #000; }
+        .map-container { position: relative; width: 100%; max-width: 900px; mask-image: radial-gradient(circle, black 95%, transparent 100%); -webkit-mask-image: radial-gradient(circle, black 95%, transparent 100%); border-radius: 10px; box-shadow: 0 0 50px rgba(0,0,0,0.8); }
+        .map-image { display: block; width: 100%; height: auto; filter: sepia(0.2) brightness(0.8) contrast(1.1); border-radius: 10px; }
+        .map-svg-overlay { position: absolute; top: 0; left: 0; width: 100%; height: 100%; z-index: 10; pointer-events: none; }
+        
+        .map-region { fill: rgba(0,0,0,0); stroke: rgba(0,0,0,0); stroke-width: 2; cursor: pointer; transition: all 0.4s cubic-bezier(0.23, 1, 0.32, 1); pointer-events: auto; }
+        
+        /* I tracciati precisi sulla tua immagine custom */
+        .path-nokron { d: path('M 80,100 L 250,70 L 380,100 L 470,250 L 460,430 L 350,510 L 200,530 L 70,420 L 50,250 Z'); }
+        .path-sepolcri { d: path('M 70,550 L 180,550 L 250,530 L 350,520 L 440,560 L 520,680 L 520,780 L 450,900 L 250,940 L 80,900 L 50,750 Z'); }
+        .path-altus { d: path('M 420,200 L 550,150 L 680,200 L 720,320 L 720,480 L 650,550 L 550,650 L 470,530 L 400,420 Z'); }
+        .path-cime { d: path('M 600,100 L 750,70 L 900,90 L 950,200 L 950,380 L 850,450 L 750,480 L 680,350 Z'); }
+        .path-forgia { d: path('M 680,520 L 820,480 L 920,520 L 960,650 L 950,850 L 850,920 L 650,930 L 550,850 L 550,700 L 600,600 Z'); }
+
+        .region-hover-sepolcri:hover, #sepolcri:hover { fill: rgba(61, 140, 76, 0.3); stroke: var(--magic-sepolcri); filter: drop-shadow(0 0 15px var(--magic-sepolcri)); }
+        .region-hover-nokron:hover, #nokron:hover { fill: rgba(74, 111, 165, 0.3); stroke: var(--magic-nokron); filter: drop-shadow(0 0 15px var(--magic-nokron)); }
+        .region-hover-altus:hover, #altus:hover { fill: rgba(197, 160, 89, 0.3); stroke: var(--magic-altus); filter: drop-shadow(0 0 15px var(--magic-altus)); }
+        .region-hover-forgia:hover, #forgia:hover { fill: rgba(178, 76, 61, 0.3); stroke: var(--magic-forgia); filter: drop-shadow(0 0 15px var(--magic-forgia)); }
+        .region-hover-cime:hover, #cime:hover { fill: rgba(224, 224, 224, 0.3); stroke: var(--magic-cime); filter: drop-shadow(0 0 15px var(--magic-cime)); }
+
+        /* --- PREVIEW CARDS (CENTRATE E IMPONENTI) --- */
+        .preview-section { padding: 40px 20px 100px; max-width: 800px; margin: 0 auto; display: flex; flex-direction: column; gap: 30px; align-items: center; width: 100%; position: relative; z-index: 5; }
+        .preview-card { background: rgba(10, 10, 9, 0.85); border: 1px solid rgba(255,255,255,0.05); width: 100%; padding: 40px 20px; cursor: pointer; position: relative; overflow: hidden; backdrop-filter: blur(8px); display: flex; flex-direction: column; align-items: center; text-align: center; transition: 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275); }
+        .preview-card:hover { transform: translateY(-10px); box-shadow: 0 15px 40px rgba(0,0,0,1); }
+        
+        .preview-rune { font-size: 4rem; margin-bottom: 15px; color: var(--text-muted); transition: 0.4s ease; text-shadow: 0 0 10px rgba(0,0,0,0.8); position: relative; z-index: 2; }
+        .preview-card:hover .preview-rune { color: inherit; text-shadow: 0 0 20px currentColor; animation: glint 1.5s infinite alternate; }
+        .preview-text { display: flex; flex-direction: column; align-items: center; position: relative; z-index: 2; }
+        .preview-title { font-family: var(--font-title); font-size: 2.2rem; letter-spacing: 4px; margin-bottom: 5px; color: #fff; }
+        .preview-desc { font-size: 1.15rem; color: var(--text-muted); font-style: italic; }
+
+        /* Magia Preview Card */
+        .preview-card.sepolcri::before { content: ''; position: absolute; bottom: 0; left: 0; width: 100%; height: 200%; background-image: url("data:image/svg+xml,%3Csvg width='100%25' height='100%25' viewBox='0 0 100 200' preserveAspectRatio='none' xmlns='http://www.w3.org/2000/svg'%3E%3Cpath d='M10,200 C30,150 -10,100 20,50 C40,0 0,-50 10,-100' fill='none' stroke='%233d8c4c' stroke-width='2' opacity='0.7'/%3E%3Cpath d='M90,200 C70,150 110,100 80,50 C60,0 100,-50 90,-100' fill='none' stroke='%233d8c4c' stroke-width='2' opacity='0.7'/%3E%3Ccircle cx='15' cy='150' r='3' fill='%233d8c4c'/%3E%3C/svg%3E"); background-size: 100% 50%; opacity: 0; pointer-events: none; z-index: 1; }
+        .preview-card.sepolcri:hover { border-bottom: 4px solid var(--magic-sepolcri); }
+        .preview-card.sepolcri:hover::before { opacity: 0.6; filter: drop-shadow(0 0 10px var(--magic-sepolcri)); animation: creep-vines 4s linear infinite; }
+        @keyframes creep-vines { 0% { background-position: 0 100%; } 100% { background-position: 0 0; } }
+
+        .preview-card.nokron::before, .preview-card.nokron::after { content: ''; position: absolute; width: 4px; height: 4px; background: transparent; border-radius: 50%; pointer-events: none; z-index: 1; opacity: 0; }
+        .preview-card.nokron:hover { border-bottom: 4px solid var(--magic-nokron); }
+        .preview-card.nokron:hover::before { box-shadow: 10vw 20px var(--magic-nokron), 50vw 100px #fff, 80vw 40px var(--magic-nokron), 30vw 150px #fff, 90vw 80px var(--magic-nokron), 20vw 200px #fff, 40vw 180px var(--magic-nokron); animation: nokron-up 2.5s linear infinite; }
+        .preview-card.nokron:hover::after { box-shadow: 25vw 120px #fff, 85vw 30px var(--magic-nokron), 45vw 170px #fff, 65vw 50px var(--magic-nokron), 15vw 210px #fff; animation: nokron-up 4s linear infinite; }
+        @keyframes nokron-up { 0% { transform: translateY(100px); opacity: 0; } 20% { opacity: 1; filter: drop-shadow(0 0 10px var(--magic-nokron)); } 80% { opacity: 1; } 100% { transform: translateY(-200px); opacity: 0; } }
+
+        .preview-card.altus::before, .preview-card.altus::after { content: ''; position: absolute; top: -10%; bottom: -10%; width: 25px; background: var(--magic-altus); opacity: 0; pointer-events: none; z-index: 1; filter: drop-shadow(0 0 12px var(--magic-altus)); }
+        .preview-card.altus::before { left: 10%; clip-path: polygon(40% 0, 80% 0, 45% 45%, 90% 45%, 10% 100%, 40% 55%, 0 55%); }
+        .preview-card.altus::after { right: 10%; clip-path: polygon(60% 0, 100% 0, 65% 45%, 100% 45%, 20% 100%, 50% 55%, 10% 55%); transform: scaleY(-1); }
+        .preview-card.altus:hover { border-bottom: 4px solid var(--magic-altus); }
+        .preview-card.altus:hover::before { animation: altus-strike 1s infinite; }
+        .preview-card.altus:hover::after { animation: altus-strike 1.3s infinite 0.4s; }
+        @keyframes altus-strike { 0%, 90%, 100% { opacity: 0; transform: scale(1.1) translateX(0); } 92% { opacity: 1; transform: scale(1.1) translateX(-10px); background: #fff; } 94% { opacity: 0; } 96% { opacity: 0.8; transform: scale(1.1) translateX(10px); background: var(--magic-altus); } }
+
+        .preview-card.forgia::before, .preview-card.forgia::after { content: ''; position: absolute; bottom: -20px; width: 150%; height: 120px; filter: blur(12px); opacity: 0; pointer-events: none; z-index: 1; left: -25%; }
+        .preview-card.forgia::before { background: radial-gradient(ellipse at center bottom, var(--magic-forgia) 0%, transparent 60%); }
+        .preview-card.forgia::after { background: repeating-linear-gradient(to right, transparent, var(--magic-forgia) 10%, transparent 20%); mix-blend-mode: screen; }
+        .preview-card.forgia:hover { border-bottom: 4px solid var(--magic-forgia); }
+        .preview-card.forgia:hover::before { opacity: 0.8; bottom: -20px; animation: forge-burn 1.2s infinite alternate ease-in-out; }
+        .preview-card.forgia:hover::after { opacity: 0.4; animation: forge-dance 0.6s infinite alternate ease-in-out; }
+        @keyframes forge-burn { from { transform: scaleY(1); } to { transform: scaleY(1.8); } }
+        @keyframes forge-dance { from { transform: translateX(-10px) scaleY(1.2); } to { transform: translateX(10px) scaleY(1.6); } }
+
+        .preview-card.cime::before { content: ''; position: absolute; bottom: 0; left: 0; width: 100%; height: 100%; background: linear-gradient(to top, rgba(224, 224, 224, 0.4), transparent 70%); clip-path: polygon(0 100%, 15% 65%, 30% 100%, 50% 50%, 70% 100%, 85% 70%, 100% 100%); transform: translateY(100%); transition: transform 0.5s cubic-bezier(0.175, 0.885, 0.32, 1.275); pointer-events: none; z-index: 1; }
+        .preview-card.cime:hover { border-bottom: 4px solid var(--magic-cime); box-shadow: inset 0 -30px 40px rgba(224,224,224,0.15), 0 15px 40px rgba(0,0,0,1); }
+        .preview-card.cime:hover::before { transform: translateY(0); filter: drop-shadow(0 -5px 15px #fff); animation: cime-breath 3s infinite alternate ease-in-out; }
+        @keyframes cime-breath { from { transform: translateY(10px); opacity: 0.7; } to { transform: translateY(-5px); opacity: 1; } }
+
+        /* --- MODAL MAPPA GLOBALE --- */
+        .map-modal { position: fixed; top: 0; left: 0; width: 100%; height: 100%; background-color: rgba(5, 5, 5, 0.98); z-index: 1001; display: flex; justify-content: center; align-items: center; opacity: 0; visibility: hidden; transition: 0.4s ease; backdrop-filter: blur(15px); }
+        .map-modal.active { opacity: 1; visibility: visible; }
+        .map-modal-content { width: 95%; max-width: 900px; position: relative; display: flex; flex-direction: column; align-items: center; }
+
+        /* --- OVERLAY DELLA MAPPA / LORE --- */
+        .overlay { position: fixed; top: 0; left: 0; width: 100%; height: 100%; background-color: rgba(5, 5, 5, 0.96); z-index: 1002; display: flex; justify-content: center; align-items: center; opacity: 0; visibility: hidden; transition: 0.5s cubic-bezier(0.4, 0, 0.2, 1); backdrop-filter: blur(12px); }
+        .overlay.active { opacity: 1; visibility: visible; }
+        .realm-card { background-color: #0c0c0b; border: 1.5px solid var(--region-color); padding: 50px 40px; max-width: 600px; width: 90%; text-align: center; transform: translateY(40px) scale(0.95); transition: 0.5s cubic-bezier(0.34, 1.56, 0.64, 1); box-shadow: 0 0 60px rgba(0,0,0,1), inset 0 0 25px rgba(0,0,0,0.7); position: relative; }
+        .overlay.active .realm-card { transform: translateY(0) scale(1); }
+        .realm-card::after { content: ''; position: absolute; top: -5px; left: -5px; right: -5px; bottom: -5px; border: 1px solid rgba(255,255,255,0.05); animation: runicPulse 3s infinite; pointer-events: none; }
+        .card-rune { font-size: 3.5rem; color: var(--region-color); display: block; text-shadow: 0 0 20px var(--region-color), 0 0 10px var(--region-color); animation: glint 2s infinite alternate, subtleRotate 8s infinite linear; }
+        .card-title { font-family: var(--font-title); font-size: 2.5rem; color: #fff; letter-spacing: 4px; margin-bottom: 5px; text-shadow: 0 0 15px rgba(255,255,255,0.2); }
+        .card-subtitle { font-family: var(--font-title); font-size: 1rem; color: var(--region-color); letter-spacing: 2px; margin-bottom: 25px; }
+        .card-desc { font-size: 1.25rem; color: var(--text-muted); margin-bottom: 40px; line-height: 1.6; }
+        .enter-btn { font-family: var(--font-title); background: transparent; border: 1px solid var(--region-color); color: var(--region-color); padding: 12px 35px; letter-spacing: 2px; text-transform: uppercase; cursor: pointer; transition: 0.3s cubic-bezier(0.4, 0, 0.2, 1); display: inline-block; box-shadow: inset 0 0 10px rgba(0,0,0,0.5); }
+        .enter-btn:hover { background: var(--region-color); color: #000; box-shadow: 0 0 25px var(--region-color), inset 0 0 15px rgba(255,255,255,0.2); }
+        .close-overlay { position: absolute; top: 15px; right: 25px; background: none; border: none; color: var(--text-muted); font-size: 2rem; cursor: pointer; transition: color 0.3s ease; }
+        .close-overlay:hover { color: var(--region-color); }
+
+        /* --- STILI DELLE PAGINE INTERNE E PROJECT CARDS --- */
+        .page-wrapper { min-height: 100vh; display: flex; flex-direction: column; align-items: center; padding-bottom: 100px; position: relative; z-index: 10; }
+        .region-header { text-align: center; padding: 100px 20px 40px; width: 100%; border-bottom: 1px solid rgba(255,255,255,0.05); background: linear-gradient(180deg, rgba(5,5,5,0.9), transparent); }
+        .region-rune { font-size: 5rem; text-shadow: 0 0 30px currentColor, 0 0 15px currentColor; margin-bottom: 10px; animation: glint 3s infinite alternate; }
+        .region-title { font-family: var(--font-title); font-size: 4rem; letter-spacing: 6px; color: #fff; margin-bottom: 5px; text-shadow: 0 0 20px rgba(255,255,255,0.2); }
+        .region-subtitle { font-family: var(--font-title); font-size: 1.2rem; letter-spacing: 3px; text-transform: uppercase; }
+        .content-area { max-width: 1100px; width: 100%; padding: 60px 20px; text-align: center; }
+        .lore-text { font-size: 1.5rem; color: var(--text-main); font-style: italic; margin-bottom: 80px; line-height: 1.8; text-shadow: 0 2px 5px rgba(0,0,0,0.9); }
+        
+        .project-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(320px, 1fr)); gap: 40px; text-align: left; }
+        .project-card-inner { background: rgba(10, 10, 9, 0.85); border: 1px solid rgba(255,255,255,0.1); display: flex; flex-direction: column; transition: 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275); backdrop-filter: blur(8px); position: relative; overflow: hidden; box-shadow: 0 10px 30px rgba(0,0,0,0.8); height: 100%; }
+        .project-card-inner:hover { transform: translateY(-10px); border-color: currentColor; box-shadow: 0 15px 40px rgba(0,0,0,0.9), 0 0 20px currentColor; }
+        .card-image-wrapper { width: 100%; height: 200px; overflow: hidden; position: relative; border-bottom: 1px solid rgba(255,255,255,0.05); }
+        .card-image-wrapper img { width: 100%; height: 100%; object-fit: cover; filter: sepia(0.4) brightness(0.6) contrast(1.2); transition: 0.5s ease; }
+        .project-card-inner:hover .card-image-wrapper img { transform: scale(1.08); filter: sepia(0.2) brightness(0.9) contrast(1.1); }
+        .card-overlay-btn { position: absolute; top: 50%; left: 50%; transform: translate(-50%, -50%); background: rgba(0,0,0,0.8); border: 1px solid currentColor; color: #fff; font-family: var(--font-title); padding: 10px 25px; letter-spacing: 2px; text-transform: uppercase; font-size: 0.9rem; opacity: 0; transition: 0.3s ease; text-decoration: none; }
+        .project-card-inner:hover .card-overlay-btn { opacity: 1; }
+        .card-overlay-btn:hover { background: currentColor; color: #000; box-shadow: 0 0 15px currentColor; }
+        .card-content { padding: 30px; display: flex; flex-direction: column; flex-grow: 1; }
+        .card-tags { font-family: var(--font-title); font-size: 0.75rem; letter-spacing: 2px; text-transform: uppercase; color: currentColor; margin-bottom: 15px; display: flex; gap: 10px; }
+        .card-tags span { border-bottom: 1px solid currentColor; padding-bottom: 2px; }
+        .project-card-inner h3 { font-family: var(--font-title); color: #fff; font-size: 1.6rem; margin-bottom: 10px; letter-spacing: 1px; }
+        .item-lore { font-style: italic; color: var(--text-muted); font-size: 1.1rem; margin-bottom: 20px; line-height: 1.5; border-left: 2px solid rgba(255,255,255,0.1); padding-left: 15px; }
+        .item-desc { font-size: 1.15rem; color: #b5b5b5; line-height: 1.6; margin-bottom: 0; }
+        
+        .back-nav { margin-top: 80px; }
+        .btn-back-home { font-family: var(--font-title); border: 1px solid var(--text-muted); color: var(--text-muted); padding: 12px 30px; letter-spacing: 2px; text-transform: uppercase; cursor: pointer; background: transparent; transition: 0.3s; box-shadow: inset 0 0 8px rgba(0,0,0,0.4); }
+        .btn-back-home:hover { border-color: #fff; color: #fff; background: rgba(255,255,255,0.06); box-shadow: 0 0 15px rgba(255,255,255,0.1), inset 0 0 10px rgba(255,255,255,0.02); }
+
+        /* Colori Dinamici Interni per le Cards e i Testi */
+        #view-sepolcri .region-rune, #view-sepolcri .region-subtitle, #view-sepolcri .project-card-inner, #view-sepolcri .card-tags, #view-sepolcri .card-overlay-btn { color: var(--magic-sepolcri); }
+        #view-nokron .region-rune, #view-nokron .region-subtitle, #view-nokron .project-card-inner, #view-nokron .card-tags, #view-nokron .card-overlay-btn { color: var(--magic-nokron); }
+        #view-altus .region-rune, #view-altus .region-subtitle, #view-altus .project-card-inner, #view-altus .card-tags, #view-altus .card-overlay-btn { color: var(--magic-altus); }
+        #view-forgia .region-rune, #view-forgia .region-subtitle, #view-forgia .project-card-inner, #view-forgia .card-tags, #view-forgia .card-overlay-btn { color: var(--magic-forgia); }
+        #view-cime .region-rune, #view-cime .region-subtitle, #view-cime .project-card-inner, #view-cime .card-tags, #view-cime .card-overlay-btn { color: var(--magic-cime); }
+
+        /* ANIMAZIONI DI SUPPORTO */
+        @keyframes pulse { 0% { opacity: 0.5; } 50% { opacity: 1; } 100% { opacity: 0.5; } }
+        @keyframes glint { from { filter: brightness(1) drop-shadow(0 0 10px currentColor); } to { filter: brightness(1.3) drop-shadow(0 0 25px currentColor); } }
+        @keyframes runicPulse { 0% { border-color: rgba(255,255,255,0.05); box-shadow: 0 0 0px var(--region-color); } 50% { border-color: var(--region-color); box-shadow: 0 0 15px var(--region-color); } 100% { border-color: rgba(255,255,255,0.05); box-shadow: 0 0 0px var(--region-color); } }
+        @keyframes subtleRotate { from { transform: rotate(0deg); } to { transform: rotate(360deg); } }
+    </style>
+</head>
+<body>
+
+    <div id="loader">
+        <svg viewBox="0 0 100 100" class="loader-rune">
+            <circle cx="35" cy="55" r="22" fill="none" stroke="currentColor" stroke-width="2.5"/>
+            <circle cx="65" cy="55" r="22" fill="none" stroke="currentColor" stroke-width="2.5"/>
+            <circle cx="50" cy="35" r="22" fill="none" stroke="currentColor" stroke-width="2.5"/>
+            <line x1="50" y1="5" x2="50" y2="95" stroke="currentColor" stroke-width="2.5"/>
+            <path d="M 15 50 Q 50 100 85 50" fill="none" stroke="currentColor" stroke-width="2.5"/>
+            <line x1="20" y1="20" x2="80" y2="20" stroke="currentColor" stroke-width="2.5"/>
+        </svg>
+    </div>
+
+    <div class="home-btn-container" onclick="goToHome()" title="Torna all'Interregno">
+        <svg viewBox="0 0 100 100" class="shattered-rune">
+            <circle cx="33" cy="55" r="22" fill="none" stroke="currentColor" stroke-width="2.5" stroke-dasharray="10 5 30 10 5 15"/>
+            <circle cx="67" cy="55" r="22" fill="none" stroke="currentColor" stroke-width="2.5" stroke-dasharray="25 8 15 5 10 15"/>
+            <circle cx="50" cy="33" r="22" fill="none" stroke="currentColor" stroke-width="2.5" stroke-dasharray="15 15 20 5 10 8"/>
+            <line x1="50" y1="5" x2="50" y2="95" stroke="currentColor" stroke-width="2.5" stroke-dasharray="20 5 30 10 15 5"/>
+            <path d="M 15 50 Q 50 100 85 50" fill="none" stroke="currentColor" stroke-width="2.5" stroke-dasharray="35 10 15 8 20 5"/>
+            <line x1="15" y1="20" x2="85" y2="20" stroke="currentColor" stroke-width="2.5" stroke-dasharray="10 8 40 5 15 10"/>
+        </svg>
+    </div>
+
+    <div class="lang-switch">
+        <button class="lang-btn map-nav-btn" onclick="toggleMapModal()" data-i18n="btn_map_nav">MAPPA</button>
+        <span style="color:var(--text-muted)">|</span>
+        <button id="lang-it" class="lang-btn active" onclick="setLanguage('it')">IT</button>
+        <span style="color:var(--text-muted)">|</span>
+        <button id="lang-en" class="lang-btn" onclick="setLanguage('en')">EN</button>
+    </div>
+
+    <div class="hud-container">
+        <div class="stat-bar-bg hp-bg"><div class="stat-bar-fill hp-fill" id="hp-fill"></div></div>
+        <div class="stat-bar-bg fp-bg"><div class="stat-bar-fill fp-fill" id="fp-fill"></div></div>
+        <div class="stat-bar-bg st-bg"><div class="stat-bar-fill st-fill" id="stamina-fill"></div></div>
+    </div>
+
+    <div id="map-modal" class="map-modal">
+        <div class="map-modal-content">
+            <button class="close-overlay" onclick="toggleMapModal()" style="top: -40px;">✕</button>
+            <h2 class="section-title" data-i18n="map_title" style="color: #fff; text-shadow: 0 0 15px var(--magic-altus); margin-bottom: 20px;">La Mappa dell'Anima</h2>
+            <div class="map-container">
+                <img src="mappa.jpg" alt="Map" class="map-image">
+                <svg viewBox="0 0 1000 1000" class="map-svg-overlay" preserveAspectRatio="none">
+                    <path class="map-region region-hover-nokron path-nokron" onclick="openOverlay('nokron')" />
+                    <path class="map-region region-hover-sepolcri path-sepolcri" onclick="openOverlay('sepolcri')" />
+                    <path class="map-region region-hover-altus path-altus" onclick="openOverlay('altus')" />
+                    <path class="map-region region-hover-cime path-cime" onclick="openOverlay('cime')" />
+                    <path class="map-region region-hover-forgia path-forgia" onclick="openOverlay('forgia')" />
+                </svg>
+            </div>
+        </div>
+    </div>
+
+    <main id="view-home" class="view active">
+        <header class="hero">
+            <h1 class="title">GABRIELE D. BOFFA</h1>
+            <div class="runic-name">ᚨᚱᛁᚢᛋᚨᛗ</div>
+            <p class="manifesto" data-i18n="hero_manifesto">Cinque regni. Cinque frammenti di un'unica anima.</p>
+            <a href="#mappa" class="scroll-down" data-i18n="scroll_down">Esplora l'Interregno ↓</a>
+        </header>
+
+        <div class="lands-between-wrapper">
+            <canvas id="star-trail-canvas"></canvas>
+
+            <section class="map-section" id="mappa">
+                <h2 class="section-title" data-i18n="map_title">La Mappa dell'Anima</h2>
+                <div class="map-container">
+                    <img src="mappa.jpg" alt="Map" class="map-image">
+                    <svg viewBox="0 0 1000 1000" id="lands-between-svg" class="map-svg-overlay" preserveAspectRatio="none">
+                        <path id="nokron" class="map-region path-nokron" onclick="openOverlay('nokron')" />
+                        <path id="sepolcri" class="map-region path-sepolcri" onclick="openOverlay('sepolcri')" />
+                        <path id="altus" class="map-region path-altus" onclick="openOverlay('altus')" />
+                        <path id="cime" class="map-region path-cime" onclick="openOverlay('cime')" />
+                        <path id="forgia" class="map-region path-forgia" onclick="openOverlay('forgia')" />
+                    </svg>
+                </div>
+            </section>
+
+            <section class="preview-section">
+                <div class="preview-card sepolcri" onclick="openOverlay('sepolcri')" style="color: var(--magic-sepolcri);">
+                    <span class="preview-rune">♱</span>
+                    <div class="preview-text">
+                        <h3 class="preview-title" data-i18n="p_sep_t">I Sepolcri</h3>
+                        <p class="preview-desc" data-i18n="p_sep_d">Il Dominio della Musica</p>
+                    </div>
+                </div>
+                <div class="preview-card nokron" onclick="openOverlay('nokron')" style="color: var(--magic-nokron);">
+                    <span class="preview-rune">✧</span>
+                    <div class="preview-text">
+                        <h3 class="preview-title" data-i18n="p_nok_t">Nokron</h3>
+                        <p class="preview-desc" data-i18n="p_nok_d">Il Dominio del Disegno</p>
+                    </div>
+                </div>
+                <div class="preview-card altus" onclick="openOverlay('altus')" style="color: var(--magic-altus);">
+                    <span class="preview-rune">❂</span>
+                    <div class="preview-text">
+                        <h3 class="preview-title" data-i18n="p_alt_t">L'Altopiano</h3>
+                        <p class="preview-desc" data-i18n="p_alt_d">Il Dominio della Meccanica</p>
+                    </div>
+                </div>
+                <div class="preview-card forgia" onclick="openOverlay('forgia')" style="color: var(--magic-forgia);">
+                    <span class="preview-rune">⚒</span>
+                    <div class="preview-text">
+                        <h3 class="preview-title" data-i18n="p_for_t">La Forgia</h3>
+                        <p class="preview-desc" data-i18n="p_for_d">Il Dominio dei Progetti</p>
+                    </div>
+                </div>
+                <div class="preview-card cime" onclick="openOverlay('cime')" style="color: var(--magic-cime);">
+                    <span class="preview-rune">🏔</span>
+                    <div class="preview-text">
+                        <h3 class="preview-title" data-i18n="p_cim_t">Le Cime</h3>
+                        <p class="preview-desc" data-i18n="p_cim_d">Il Dominio del Corpo</p>
+                    </div>
+                </div>
+            </section>
+        </div>
+    </main>
+
+    <div id="region-overlay" class="overlay" style="z-index: 1002;">
+        <div class="realm-card">
+            <button class="close-overlay" onclick="closeOverlay()">✕</button>
+            <span class="card-rune" id="card-rune">ᚱ</span>
+            <h2 class="card-title" id="card-title">Nome</h2>
+            <p class="card-subtitle" id="card-subtitle">Dominio</p>
+            <p class="card-desc" id="card-desc">Descrizione...</p>
+            <button class="enter-btn" id="btn-enter" onclick="navigateToRealm()" data-i18n="btn_enter">Addentrarsi</button>
+        </div>
+    </div>
+
+
+    <article id="view-sepolcri" class="view">
+        <div class="page-wrapper">
+            <header class="region-header">
+                <div class="region-rune">♱</div>
+                <h1 class="region-title" data-i18n="p_sep_t">I Sepolcri</h1>
+                <div class="region-subtitle" data-i18n="p_sep_d">Il Dominio della Musica</div>
+            </header>
+            <main class="content-area">
+                <p class="lore-text" data-i18n="v_sep_lore">"Dove l'aria si fa densa di nebbia, il suono diventa l'unica guida. Le frequenze scolpiscono il silenzio, creando cattedrali di vibrazioni."</p>
+                <div class="project-grid">
+                    <div class="project-card-inner">
+                        <div class="card-image-wrapper">
+                            <img src="https://images.unsplash.com/photo-1510915361894-db8b60106cb1?auto=format&fit=crop&q=80&w=800" alt="Sinfonia">
+                            <a href="#" class="card-overlay-btn" data-i18n="btn_listen">Ascolta</a>
+                        </div>
+                        <div class="card-content">
+                            <div class="card-tags"><span data-i18n="tag_ambient">Ambient</span><span data-i18n="tag_acoustic">Acustica</span></div>
+                            <h3 data-i18n="sep_p1_t">Sinfonia delle Rovine</h3>
+                            <p class="item-lore" data-i18n="sep_p1_l">"Un'eco strappata alle pareti di pietra di un antico mausoleo."</p>
+                            <p class="item-desc" data-i18n="sep_p1_d">Traccia strumentale composta utilizzando riverberi naturali e sintetizzatori analogici. Un viaggio sonoro attraverso la nebbia.</p>
+                        </div>
+                    </div>
+                    <div class="project-card-inner">
+                        <div class="card-image-wrapper">
+                            <img src="https://images.unsplash.com/photo-1598488035139-bdbb2231ce04?auto=format&fit=crop&q=80&w=800" alt="Echi">
+                            <a href="#" class="card-overlay-btn" data-i18n="btn_examine">Esamina</a>
+                        </div>
+                        <div class="card-content">
+                            <div class="card-tags"><span data-i18n="tag_live">Live Set</span><span data-i18n="tag_studio">Studio</span></div>
+                            <h3 data-i18n="sep_p2_t">Echi dalla Nebbia</h3>
+                            <p class="item-lore" data-i18n="sep_p2_l">"Registrato quando le ombre si allungano e i fuochi si spengono."</p>
+                            <p class="item-desc" data-i18n="sep_p2_d">Performance dal vivo catturata in presa diretta. Chitarre arpeggiate e layer di suoni per evocare solitudine e scoperta.</p>
+                        </div>
+                    </div>
+                </div>
+            </main>
+        </div>
+    </article>
+
+    <article id="view-nokron" class="view">
+        <div class="page-wrapper">
+            <header class="region-header">
+                <div class="region-rune">✧</div>
+                <h1 class="region-title" data-i18n="p_nok_t">Nokron</h1>
+                <div class="region-subtitle" data-i18n="p_nok_d">Il Dominio del Disegno</div>
+            </header>
+            <main class="content-area">
+                <p class="lore-text" data-i18n="v_nok_lore">"Sotto un cielo di stelle fredde, il tratto diventa inchiostro cosmico. Qui l'immaginazione si cristallizza in forme eteree."</p>
+                <div class="project-grid">
+                    <div class="project-card-inner">
+                        <div class="card-image-wrapper">
+                            <img src="https://images.unsplash.com/photo-1513364776144-60967b0f800f?auto=format&fit=crop&q=80&w=800" alt="Volto">
+                            <a href="#" class="card-overlay-btn" data-i18n="btn_observe">Osserva</a>
+                        </div>
+                        <div class="card-content">
+                            <div class="card-tags"><span data-i18n="tag_concept">Concept Art</span><span data-i18n="tag_ink">Inchiostro</span></div>
+                            <h3 data-i18n="nok_p1_t">Il Volto della Stella</h3>
+                            <p class="item-lore" data-i18n="nok_p1_l">"Tracciato alla luce flebile di una falsa luna, raffigura ciò che non può essere nominato."</p>
+                            <p class="item-desc" data-i18n="nok_p1_d">Illustrazione a china e carboncino. Un focus sul chiaroscuro e sulle forme organiche che emergono dal vuoto cosmico.</p>
+                        </div>
+                    </div>
+                    <div class="project-card-inner">
+                        <div class="card-image-wrapper">
+                            <img src="https://images.unsplash.com/photo-1550684376-efcbd6e3f031?auto=format&fit=crop&q=80&w=800" alt="Canvas">
+                            <a href="#" class="card-overlay-btn" data-i18n="btn_explore">Esplora</a>
+                        </div>
+                        <div class="card-content">
+                            <div class="card-tags"><span data-i18n="tag_digital">Digital</span><span data-i18n="tag_sketch">Sketchbook</span></div>
+                            <h3 data-i18n="nok_p2_t">Appunti di Scintipietra</h3>
+                            <p class="item-lore" data-i18n="nok_p2_l">"Memorie visive incise su tavolette digitali, fredde al tocco."</p>
+                            <p class="item-desc" data-i18n="nok_p2_d">Collezione di speedpainting e studi anatomici realizzati su tavoletta grafica, esplorando atmosfere cupe e misteriose.</p>
+                        </div>
+                    </div>
+                </div>
+            </main>
+        </div>
+    </article>
+
+    <article id="view-altus" class="view">
+        <div class="page-wrapper">
+            <header class="region-header">
+                <div class="region-rune">❂</div>
+                <h1 class="region-title" data-i18n="p_alt_t">L'Altopiano</h1>
+                <div class="region-subtitle" data-i18n="p_alt_d">Il Dominio della Meccanica</div>
+            </header>
+            <main class="content-area">
+                <p class="lore-text" data-i18n="v_alt_lore">"La pura devozione per il metallo temprato, l'ossessione per la velocità e l'odore dell'olio bruciato al vento autunnale."</p>
+                <div class="project-grid">
+                    <div class="project-card-inner">
+                        <div class="card-image-wrapper">
+                            <img src="https://images.unsplash.com/photo-1583121274602-3e2820c69888?auto=format&fit=crop&q=80&w=800" alt="V8">
+                            <a href="#" class="card-overlay-btn" data-i18n="btn_examine">Esamina</a>
+                        </div>
+                        <div class="card-content">
+                            <div class="card-tags"><span data-i18n="tag_build">Custom Build</span><span data-i18n="tag_mech">Meccanica</span></div>
+                            <h3 data-i18n="alt_p1_t">Cuore di Ferro</h3>
+                            <p class="item-lore" data-i18n="alt_p1_l">"Un artefatto dell'antica era meccanica, riportato alla vita dal fuoco e dal grasso."</p>
+                            <p class="item-desc" data-i18n="alt_p1_d">Progetto di restauro completo di un blocco motore. Sabbiatura, sostituzione guarnizioni e ripristino dell'iniezione.</p>
+                        </div>
+                    </div>
+                    <div class="project-card-inner">
+                        <div class="card-image-wrapper">
+                            <img src="https://images.unsplash.com/photo-1449426468159-d96dbf08f19f?auto=format&fit=crop&q=80&w=800" alt="Diari">
+                            <a href="#" class="card-overlay-btn" data-i18n="btn_log">Apri Diario</a>
+                        </div>
+                        <div class="card-content">
+                            <div class="card-tags"><span data-i18n="tag_road">On the Road</span><span data-i18n="tag_photo">Fotografia</span></div>
+                            <h3 data-i18n="alt_p2_t">Pellegrinaggio d'Ambra</h3>
+                            <p class="item-lore" data-i18n="alt_p2_l">"Tracce di pneumatici lasciate sulle strade dorate dell'altopiano."</p>
+                            <p class="item-desc" data-i18n="alt_p2_d">Reportage fotografico e log di viaggio attraverso passi montani e strade dimenticate. La pura estetica della guida.</p>
+                        </div>
+                    </div>
+                </div>
+            </main>
+        </div>
+    </article>
+
+    <article id="view-forgia" class="view">
+        <div class="page-wrapper">
+            <header class="region-header">
+                <div class="region-rune">⚒</div>
+                <h1 class="region-title" data-i18n="p_for_t">La Forgia</h1>
+                <div class="region-subtitle" data-i18n="p_for_d">Il Dominio dei Progetti</div>
+            </header>
+            <main class="content-area">
+                <p class="lore-text" data-i18n="v_for_lore">"Scintille, calore e incudine. È la fornace da cui nascono architetture digitali, codice grezzo e soluzioni tecniche."</p>
+                <div class="project-grid">
+                    <div class="project-card-inner">
+                        <div class="card-image-wrapper">
+                            <img src="https://images.unsplash.com/photo-1555066931-4365d14bab8c?auto=format&fit=crop&q=80&w=800" alt="Web">
+                            <a href="#" class="card-overlay-btn" data-i18n="btn_inspect">Ispeziona</a>
+                        </div>
+                        <div class="card-content">
+                            <div class="card-tags"><span data-i18n="tag_web">Web App</span><span data-i18n="tag_front">Front-end</span></div>
+                            <h3 data-i18n="for_p1_t">Architettura Astrale</h3>
+                            <p class="item-lore" data-i18n="for_p1_l">"Costruito tessendo fili di logica e stringhe di comando in un telaio di silicio."</p>
+                            <p class="item-desc" data-i18n="for_p1_d">Applicazione web reattiva e dinamica. Gestione dello stato complessa, animazioni fluide e interfacce utente oscure e minimali.</p>
+                        </div>
+                    </div>
+                    <div class="project-card-inner">
+                        <div class="card-image-wrapper">
+                            <img src="https://images.unsplash.com/photo-1518770660439-4636190af475?auto=format&fit=crop&q=80&w=800" alt="Hardware">
+                            <a href="#" class="card-overlay-btn" data-i18n="btn_analyze">Analizza</a>
+                        </div>
+                        <div class="card-content">
+                            <div class="card-tags"><span data-i18n="tag_hard">Hardware</span><span data-i18n="tag_script">Scripting</span></div>
+                            <h3 data-i18n="for_p2_t">Terminale Runico</h3>
+                            <p class="item-lore" data-i18n="for_p2_l">"Un artefatto cablato, capace di tradurre l'impulso in azione concreta."</p>
+                            <p class="item-desc" data-i18n="for_p2_d">Progetto di integrazione hardware/software. Sviluppo di script di automazione collegati a sensori fisici su schede custom.</p>
+                        </div>
+                    </div>
+                </div>
+            </main>
+        </div>
+    </article>
+
+    <article id="view-cime" class="view">
+        <div class="page-wrapper">
+            <header class="region-header">
+                <div class="region-rune">🏔</div>
+                <h1 class="region-title" data-i18n="p_cim_t">Le Cime</h1>
+                <div class="region-subtitle" data-i18n="p_cim_d">Il Dominio del Corpo</div>
+            </header>
+            <main class="content-area">
+                <p class="lore-text" data-i18n="v_cim_lore">"Ghiaccio e pietra. Il luogo della disciplina inflessibile, dove temprare la carne e la volontà contro il gelo dell'esistenza."</p>
+                <div class="project-grid">
+                    <div class="project-card-inner">
+                        <div class="card-image-wrapper">
+                            <img src="https://images.unsplash.com/photo-1517836357463-d25dfeac3438?auto=format&fit=crop&q=80&w=800" alt="Routine">
+                            <a href="#" class="card-overlay-btn" data-i18n="btn_read">Leggi</a>
+                        </div>
+                        <div class="card-content">
+                            <div class="card-tags"><span data-i18n="tag_rout">Routine</span><span data-i18n="tag_str">Forza</span></div>
+                            <h3 data-i18n="cim_p1_t">Protocollo del Gigante</h3>
+                            <p class="item-lore" data-i18n="cim_p1_l">"Il segreto per sollevare le pietre antiche risiede nella costanza del movimento."</p>
+                            <p class="item-desc" data-i18n="cim_p1_d">Sistema di allenamento strutturato per la progressione della forza pura. Analisi della biomeccanica e programmazione ciclica.</p>
+                        </div>
+                    </div>
+                    <div class="project-card-inner">
+                        <div class="card-image-wrapper">
+                            <img src="https://images.unsplash.com/photo-1461896836934-ffe607ba8211?auto=format&fit=crop&q=80&w=800" alt="Dati">
+                            <a href="#" class="card-overlay-btn" data-i18n="btn_verify">Verifica</a>
+                        </div>
+                        <div class="card-content">
+                            <div class="card-tags"><span data-i18n="tag_data">Dati</span><span data-i18n="tag_track">Tracker</span></div>
+                            <h3 data-i18n="cim_p2_t">Resistenza al Gelo</h3>
+                            <p class="item-lore" data-i18n="cim_p2_l">"Numeri incisi sul ghiaccio, per tenere traccia di ogni stilla di sudore versata."</p>
+                            <p class="item-desc" data-i18n="cim_p2_d">Database e fogli di calcolo sviluppati per monitorare statistiche vitali, metriche di sollevamento pesi e macro-nutrienti.</p>
+                        </div>
+                    </div>
+                </div>
+            </main>
+        </div>
+    </article>
+
+    <script>
+        // --- JS MOTORE STAR TRAIL ---
+        (function() {
+            const canvas = document.getElementById('star-trail-canvas');
+            const ctx = canvas.getContext('2d');
+            const wrapper = document.querySelector('.lands-between-wrapper');
+
+            let width, height, centerX, centerY, stars;
+            let currentScrollY = window.scrollY;
+            let targetRotationSpeed = 0.0005; 
+            let currentRotationSpeed = targetRotationSpeed;
+            let lastTime = 0;
+
+            const colors = ['#ffffff', '#ffedc2', '#a6cfff', '#c5a059', '#3d8c4c', '#4a6fa5', '#b24c3d'];
+
+            class Star {
+                constructor() { this.init(); }
+                init() {
+                    this.radius = Math.random() * (Math.max(width, height)) + 10;
+                    this.baseAngle = Math.random() * Math.PI * 2;
+                    this.speed = (Math.random() * 0.0002) + 0.0001;
+                    this.size = Math.random() * 1.5 + 0.5;
+                    this.color = colors[Math.floor(Math.random() * colors.length)];
+                    this.timeAngle = 0;
+                    this.px = centerX + Math.cos(this.baseAngle) * this.radius;
+                    this.py = centerY + Math.sin(this.baseAngle) * this.radius;
+                }
+                update(deltaTime, scrollRotation) {
+                    this.timeAngle += this.speed;
+                    let totalAngle = this.baseAngle + this.timeAngle + scrollRotation;
+                    this.x = centerX + Math.cos(totalAngle) * this.radius;
+                    this.y = centerY + Math.sin(totalAngle) * this.radius;
+                }
+                draw() {
+                    ctx.beginPath();
+                    ctx.moveTo(this.px, this.py); 
+                    ctx.lineTo(this.x, this.y);   
+                    ctx.lineWidth = this.size;
+                    ctx.strokeStyle = this.color;
+                    ctx.lineCap = 'round';
+                    ctx.stroke();
+                    this.px = this.x; this.py = this.y;
+                }
+            }
+
+            function resize() {
+                width = canvas.width = wrapper.offsetWidth;
+                height = canvas.height = wrapper.offsetHeight;
+                centerX = width * 0.65;
+                centerY = height * 0.4;
+                initStars();
+            }
+
+            function initStars() {
+                stars = [];
+                const numStars = Math.floor((width * height) / 2500); 
+                for (let i = 0; i < Math.min(numStars, 800); i++) { stars.push(new Star()); }
+            }
+
+            let globalRotation = 0;
+            let targetGlobalRotation = 0;
+
+            window.addEventListener('scroll', () => { targetGlobalRotation = window.scrollY * 0.002; });
+
+            function animate(time) {
+                if (!lastTime) lastTime = time;
+                const deltaTime = (time - lastTime) / 1000; 
+                lastTime = time;
+                globalRotation += (targetGlobalRotation - globalRotation) * 0.05;
+                ctx.fillStyle = 'rgba(0, 0, 0, 0.03)'; 
+                ctx.fillRect(0, 0, width, height);
+
+                stars.forEach(star => {
+                    star.update(deltaTime, globalRotation);
+                    star.draw();
+                });
+                requestAnimationFrame(animate);
+            }
+            window.addEventListener('resize', resize);
+            resize(); 
+            requestAnimationFrame(animate);
+        })();
+
+        // --- TRANSLATION DICTIONARY E MAGIA DELLE RUNE ---
+        const translations = {
+            'it': {
+                'btn_map_nav': "MAPPA", 'hero_manifesto': "Cinque regni. Cinque frammenti di un'unica anima.", 'scroll_down': "Esplora l'Interregno ↓", 'map_title': "La Mappa dell'Anima", 'btn_enter': "Addentrarsi", 'btn_back': "Ritorna alla Mappa",
+                'btn_listen': "Ascolta", 'btn_examine': "Esamina", 'btn_observe': "Osserva", 'btn_explore': "Esplora", 'btn_log': "Apri Diario", 'btn_inspect': "Ispeziona", 'btn_analyze': "Analizza", 'btn_read': "Leggi", 'btn_verify': "Verifica",
+                'tag_ambient': "Ambient", 'tag_acoustic': "Acustica", 'tag_live': "Live Set", 'tag_studio': "Studio", 'tag_concept': "Concept Art", 'tag_ink': "Inchiostro", 'tag_digital': "Digital", 'tag_sketch': "Sketchbook",
+                'tag_build': "Custom Build", 'tag_mech': "Meccanica", 'tag_road': "On the Road", 'tag_photo': "Fotografia", 'tag_web': "Web App", 'tag_front': "Front-end", 'tag_hard': "Hardware", 'tag_script': "Scripting",
+                'tag_rout': "Routine", 'tag_str': "Forza", 'tag_data': "Dati", 'tag_track': "Tracker",
+                'p_sep_t': "I Sepolcri", 'p_sep_d': "Il Dominio della Musica", 'p_nok_t': "Nokron", 'p_nok_d': "Il Dominio del Disegno", 'p_alt_t': "L'Altopiano", 'p_alt_d': "Il Dominio della Meccanica", 'p_for_t': "La Forgia", 'p_for_d': "Il Dominio dei Progetti", 'p_cim_t': "Le Cime", 'p_cim_d': "Il Dominio del Corpo",
+                'v_sep_lore': "\"Dove l'aria si fa densa di nebbia, il suono diventa l'unica guida. Le frequenze scolpiscono il silenzio, creando cattedrali di vibrazioni.\"",
+                'v_nok_lore': "\"Sotto un cielo di stelle fredde, il tratto diventa inchiostro cosmico. Qui l'immaginazione si cristallizza in forme eteree.\"",
+                'v_alt_lore': "\"La pura devozione per il metallo temprato, l'ossessione per la velocità e l'odore dell'olio bruciato al vento autunnale.\"",
+                'v_for_lore': "\"Scintille, calore e incudine. È la fornace da cui nascono architetture digitali, codice grezzo e soluzioni tecniche.\"",
+                'v_cim_lore': "\"Ghiaccio e pietra. Il luogo della disciplina inflessibile, dove temprare la carne e la volontà contro il gelo dell'esistenza.\"",
+                'sep_p1_t': "Sinfonia delle Rovine", 'sep_p1_l': "\"Un'eco strappata alle pareti di pietra di un antico mausoleo.\"", 'sep_p1_d': "Traccia strumentale composta utilizzando riverberi naturali e sintetizzatori analogici. Un viaggio sonoro attraverso la nebbia.",
+                'sep_p2_t': "Echi dalla Nebbia", 'sep_p2_l': "\"Registrato quando le ombre si allungano e i fuochi si spengono.\"", 'sep_p2_d': "Performance dal vivo catturata in presa diretta. Chitarre arpeggiate e layer di suoni per evocare solitudine e scoperta.",
+                'nok_p1_t': "Il Volto della Stella", 'nok_p1_l': "\"Tracciato alla luce flebile di una falsa luna, raffigura ciò che non può essere nominato.\"", 'nok_p1_d': "Illustrazione a china e carboncino. Un focus sul chiaroscuro e sulle forme organiche che emergono dal vuoto cosmico.",
+                'nok_p2_t': "Appunti di Scintipietra", 'nok_p2_l': "\"Memorie visive incise su tavolette digitali, fredde al tocco.\"", 'nok_p2_d': "Collezione di speedpainting e studi anatomici realizzati su tavoletta grafica, esplorando atmosfere cupe e misteriose.",
+                'alt_p1_t': "Cuore di Ferro", 'alt_p1_l': "\"Un artefatto dell'antica era meccanica, riportato alla vita dal fuoco e dal grasso.\"", 'alt_p1_d': "Progetto di restauro completo di un blocco motore. Sabbiatura, sostituzione guarnizioni e ripristino dell'iniezione.",
+                'alt_p2_t': "Pellegrinaggio d'Ambra", 'alt_p2_l': "\"Tracce di pneumatici lasciate sulle strade dorate dell'altopiano.\"", 'alt_p2_d': "Reportage fotografico e log di viaggio attraverso passi montani e strade dimenticate. La pura estetica della guida.",
+                'for_p1_t': "Architettura Astrale", 'for_p1_l': "\"Costruito tessendo fili di logica e stringhe di comando in un telaio di silicio.\"", 'for_p1_d': "Applicazione web reattiva e dinamica. Gestione dello stato complessa, animazioni fluide e interfacce utente oscure e minimali.",
+                'for_p2_t': "Terminale Runico", 'for_p2_l': "\"Un artefatto cablato, capace di tradurre l'impulso in azione concreta.\"", 'for_p2_d': "Progetto di integrazione hardware/software. Sviluppo di script di automazione collegati a sensori fisici su schede custom.",
+                'cim_p1_t': "Protocollo del Gigante", 'cim_p1_l': "\"Il segreto per sollevare le pietre antiche risiede nella costanza del movimento.\"", 'cim_p1_d': "Sistema di allenamento strutturato per la progressione della forza pura. Analisi della biomeccanica e programmazione ciclica.",
+                'cim_p2_t': "Resistenza al Gelo", 'cim_p2_l': "\"Numeri incisi sul ghiaccio, per tenere traccia di ogni stilla di sudore versata.\"", 'cim_p2_d': "Database e fogli di calcolo sviluppati per monitorare statistiche vitali, metriche di sollevamento pesi e macro-nutrienti."
+            },
+            'en': {
+                'btn_map_nav': "MAP", 'hero_manifesto': "Five realms. Five fragments of a single soul.", 'scroll_down': "Explore the Lands Between ↓", 'map_title': "Map of the Soul", 'btn_enter': "Delve Deeper", 'btn_back': "Return to Map",
+                'btn_listen': "Listen", 'btn_examine': "Examine", 'btn_observe': "Observe", 'btn_explore': "Explore", 'btn_log': "Open Log", 'btn_inspect': "Inspect", 'btn_analyze': "Analyze", 'btn_read': "Read", 'btn_verify': "Verify",
+                'tag_ambient': "Ambient", 'tag_acoustic': "Acoustic", 'tag_live': "Live Set", 'tag_studio': "Studio", 'tag_concept': "Concept Art", 'tag_ink': "Ink", 'tag_digital': "Digital", 'tag_sketch': "Sketchbook",
+                'tag_build': "Custom Build", 'tag_mech': "Mechanics", 'tag_road': "On the Road", 'tag_photo': "Photography", 'tag_web': "Web App", 'tag_front': "Front-end", 'tag_hard': "Hardware", 'tag_script': "Scripting",
+                'tag_rout': "Routine", 'tag_str': "Strength", 'tag_data': "Data", 'tag_track': "Tracker",
+                'p_sep_t': "The Graves", 'p_sep_d': "Domain of Music", 'p_nok_t': "Nokron", 'p_nok_d': "Domain of Drawing", 'p_alt_t': "The Plateau", 'p_alt_d': "Domain of Mechanics", 'p_for_t': "The Forge", 'p_for_d': "Domain of Projects", 'p_cim_t': "The Peaks", 'p_cim_d': "Domain of the Body",
+                'v_sep_lore': "\"Where the air thickens with fog, sound becomes the only guide. Frequencies sculpt the silence, creating cathedrals of vibration.\"",
+                'v_nok_lore': "\"Under a cold, starry sky, the stroke becomes cosmic ink. Here, imagination crystallizes into ethereal forms.\"",
+                'v_alt_lore': "\"Pure devotion to tempered metal, the obsession with speed, and the scent of burnt oil in the autumn wind.\"",
+                'v_for_lore': "\"Sparks, heat, and anvil. It is the furnace from which digital architectures, raw code, and technical solutions are born.\"",
+                'v_cim_lore': "\"Ice and stone. The place of unyielding discipline, where flesh and will are tempered against the frost of existence.\"",
+                'sep_p1_t': "Symphony of the Ruins", 'sep_p1_l': "\"An echo torn from the stone walls of an ancient mausoleum.\"", 'sep_p1_d': "Instrumental track composed using natural reverbs and analog synthesizers. A sonic journey through the fog.",
+                'sep_p2_t': "Echoes from the Fog", 'sep_p2_l': "\"Recorded when shadows lengthen and fires fade.\"", 'sep_p2_d': "Live performance captured in a direct take. Arpeggiated guitars and sound layers to evoke solitude and discovery.",
+                'nok_p1_t': "Face of the Star", 'nok_p1_l': "\"Traced in the feeble light of a false moon, depicting that which cannot be named.\"", 'nok_p1_d': "Ink and charcoal illustration. A focus on chiaroscuro and organic shapes emerging from the cosmic void.",
+                'nok_p2_t': "Glintstone Notes", 'nok_p2_l': "\"Visual memories etched on digital tablets, cold to the touch.\"", 'nok_p2_d': "Collection of speedpaintings and anatomical studies created on a graphic tablet, exploring dark and mysterious atmospheres.",
+                'alt_p1_t': "Heart of Iron", 'alt_p1_l': "\"An artifact of the ancient mechanical era, brought back to life by fire and grease.\"", 'alt_p1_d': "Complete engine block restoration project. Sandblasting, gasket replacement, and injection system rebuild.",
+                'alt_p2_t': "Amber Pilgrimage", 'alt_p2_l': "\"Tire tracks left on the golden roads of the plateau.\"", 'alt_p2_d': "Photo reportage and travel log across mountain passes and forgotten roads. The pure aesthetic of driving.",
+                'for_p1_t': "Astral Architecture", 'for_p1_l': "\"Built by weaving threads of logic and command strings in a silicon loom.\"", 'for_p1_d': "Reactive and dynamic web application. Complex state management, fluid animations, and dark, minimal user interfaces.",
+                'for_p2_t': "Runic Terminal", 'for_p2_l': "\"A wired artifact, capable of translating impulse into concrete action.\"", 'for_p2_d': "Hardware/software integration project. Development of automation scripts connected to physical sensors on custom boards.",
+                'cim_p1_t': "Giant's Protocol", 'cim_p1_l': "\"The secret to lifting ancient stones lies in the constancy of movement.\"", 'cim_p1_d': "Structured training system for pure strength progression. Biomechanics analysis and cyclic programming.",
+                'cim_p2_t': "Frost Resistance", 'cim_p2_l': "\"Numbers carved in ice, to keep track of every drop of sweat shed.\"", 'cim_p2_d': "Database and spreadsheets developed to monitor vital statistics, weightlifting metrics, and macro-nutrients."
+            }
+        };
+
+        const getDb = (lang) => ({
+            'sepolcri': { title: translations[lang]['p_sep_t'], subtitle: translations[lang]['p_sep_d'], desc: translations[lang]['sep_p1_d'], rune: '♱', color: '#3d8c4c' },
+            'nokron': { title: translations[lang]['p_nok_t'], subtitle: translations[lang]['p_nok_d'], desc: translations[lang]['nok_p1_d'], rune: '✧', color: '#4a6fa5' },
+            'altus': { title: translations[lang]['p_alt_t'], subtitle: translations[lang]['p_alt_d'], desc: translations[lang]['alt_p1_d'], rune: '❂', color: '#c5a059' },
+            'forgia': { title: translations[lang]['p_for_t'], subtitle: translations[lang]['p_for_d'], desc: translations[lang]['for_p1_d'], rune: '⚒', color: '#b24c3d' },
+            'cime': { title: translations[lang]['p_cim_t'], subtitle: translations[lang]['p_cim_d'], desc: translations[lang]['cim_p1_d'], rune: '🏔', color: '#e0e0e0' }
+        });
+
+        function scrambleText(element, finalString) {
+            const runes = "ᚨᚱᛁᚢᛋᛗᚠᚢᚦᚩᚱᚳᚷᚹᚻᚾᛄᛇᛈᛉᛏᛒᛖᛚᛝᛟᛞ";
+            let iteration = 0; const maxIterations = 15;
+            clearInterval(element.scrambleInterval);
+            element.classList.add('scrambling');
+
+            element.scrambleInterval = setInterval(() => {
+                let newStr = "";
+                for (let i = 0; i < finalString.length; i++) {
+                    if (finalString[i] === ' ' || finalString[i] === '\n') { newStr += finalString[i]; } 
+                    else if (i < (iteration / maxIterations) * finalString.length) { newStr += finalString[i]; } 
+                    else { newStr += runes[Math.floor(Math.random() * runes.length)]; }
+                }
+                element.innerText = newStr;
+                iteration++;
+                if (iteration > maxIterations) { clearInterval(element.scrambleInterval); element.innerText = finalString; element.classList.remove('scrambling'); }
+            }, 30);
+        }
+
+        let currentLang = 'it';
+        function setLanguage(lang) {
+            if (currentLang === lang) return;
+            currentLang = lang;
+            consumeFP(15); 
+            document.querySelectorAll('[data-i18n]').forEach(el => {
+                const key = el.getAttribute('data-i18n');
+                if (translations[lang][key]) { scrambleText(el, translations[lang][key]); }
+            });
+            document.querySelectorAll('.lang-btn:not(.map-nav-btn)').forEach(btn => btn.classList.remove('active'));
+            document.getElementById('lang-' + lang).classList.add('active');
+            
+            if (document.getElementById('region-overlay').classList.contains('active')) {
+                const data = getDb(lang)[currentSelectedRealm];
+                scrambleText(document.getElementById('card-title'), data.title);
+                scrambleText(document.getElementById('card-subtitle'), data.subtitle);
+                scrambleText(document.getElementById('card-desc'), data.desc);
+            }
+        }
+
+        // --- LOGICA SCHERMATA CARICAMENTO FAILSAFE ---
+        document.addEventListener('DOMContentLoaded', () => {
+            const loader = document.getElementById('loader');
+            function hideLoader() {
+                if(loader && loader.style.display !== 'none') {
+                    loader.style.opacity = '0';
+                    setTimeout(() => { loader.style.display = 'none'; }, 1000);
+                }
+            }
+            setTimeout(hideLoader, 800);
+            setTimeout(hideLoader, 2500); 
+        });
+
+        // --- HUD LOGIC ---
+        let stamina = 100; let fp = 100;
+        const stFill = document.getElementById('stamina-fill');
+        const fpFill = document.getElementById('fp-fill');
+
+        window.addEventListener('scroll', () => { stamina = Math.max(5, stamina - 2); stFill.style.width = stamina + '%'; });
+        setInterval(() => {
+            if (stamina < 100) { stamina = Math.min(100, stamina + 3); stFill.style.width = stamina + '%'; }
+            if (fp < 100) { fp = Math.min(100, fp + 1.5); fpFill.style.width = fp + '%'; }
+        }, 100);
+
+        function consumeFP(amount) { fp = Math.max(0, fp - amount); fpFill.style.width = fp + '%'; }
+
+        // --- GESTIONE OVERLAY E MAPPA MODAL GLOBALE ---
+        let currentSelectedRealm = '';
+        const overlay = document.getElementById('region-overlay');
+        const mapModal = document.getElementById('map-modal');
+
+        function toggleMapModal() {
+            if (mapModal.classList.contains('active')) {
+                mapModal.classList.remove('active');
+            } else {
+                consumeFP(20);
+                mapModal.classList.add('active');
+            }
+        }
+
+        function openOverlay(id) {
+            currentSelectedRealm = id;
+            const data = getDb(currentLang)[id];
+            document.getElementById('card-title').innerText = data.title;
+            document.getElementById('card-subtitle').innerText = data.subtitle;
+            document.getElementById('card-desc').innerText = data.desc;
+            document.getElementById('card-rune').innerText = data.rune;
+            overlay.style.setProperty('--region-color', data.color);
+            overlay.classList.add('active');
+        }
+
+        function closeOverlay() { overlay.classList.remove('active'); }
+
+        // BIND CLICK SU TUTTE LE MAPPE
+        document.querySelectorAll('.map-region').forEach(region => {
+            region.addEventListener('click', () => {
+                if(region.id) openOverlay(region.id);
+            });
+        });
+
+        function navigateToRealm() {
+            closeOverlay();
+            if (mapModal && mapModal.classList.contains('active')) { mapModal.classList.remove('active'); }
+            consumeFP(30); 
+            document.querySelectorAll('.view').forEach(v => {
+                v.style.opacity = '0';
+                v.style.filter = 'blur(10px)'; 
+                setTimeout(() => { v.classList.remove('active'); v.style.filter = 'none'; }, 800); 
+            });
+            setTimeout(() => {
+                const targetView = document.getElementById('view-' + currentSelectedRealm);
+                targetView.classList.add('active');
+                window.scrollTo(0,0);
+                setTimeout(() => { targetView.style.opacity = '1'; }, 100);
+            }, 800);
+        }
+
+        function goToHome() {
+            if (mapModal && mapModal.classList.contains('active')) { mapModal.classList.remove('active'); }
+            if(document.getElementById('view-home').classList.contains('active')) {
+                document.getElementById('mappa').scrollIntoView({ behavior: 'smooth' });
+                return;
+            }
+            consumeFP(30); 
+            document.querySelectorAll('.view').forEach(v => {
+                v.style.opacity = '0';
+                v.style.filter = 'blur(10px)';
+                setTimeout(() => { v.classList.remove('active'); v.style.filter = 'none'; }, 800);
+            });
+            setTimeout(() => {
+                const homeView = document.getElementById('view-home');
+                homeView.classList.add('active');
+                const mapSection = document.getElementById('mappa');
+                mapSection.scrollIntoView({ behavior: 'auto' });
+                setTimeout(() => { homeView.style.opacity = '1'; }, 100);
+            }, 800);
+        }
+    </script>
+</body>
+</html>
