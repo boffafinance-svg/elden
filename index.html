@@ -7,13 +7,13 @@
     <link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@400;600;700&family=Cormorant+Garamond:ital,wght@0,300;0,400;1,300&display=swap" rel="stylesheet">
     <style>
         :root {
-            /* Palette e Variabili Globale */
+            /* Palette e Variabili */
             --bg-color: #050505;
             --text-main: #d4c8b8;
             --text-muted: #8a8377;
             --region-color: #c5a059;
             
-            /* Colori dei Sigilli Magici dei Regni */
+            /* Sigilli Magici */
             --magic-sepolcri: #3d8c4c;
             --magic-nokron: #4a6fa5;
             --magic-altus: #c5a059;
@@ -29,7 +29,7 @@
         body { background-color: var(--bg-color); color: var(--text-main); font-family: var(--font-text); overflow-x: hidden; scroll-behavior: smooth; }
 
         /* --- SCHERMATA DI CARICAMENTO (RUNA) --- */
-        #loader { position: fixed; top: 0; left: 0; width: 100%; height: 100vh; background: #000; z-index: 9999; display: flex; justify-content: center; align-items: center; transition: opacity 1s ease, visibility 1s ease; }
+        #loader { position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: #000; z-index: 9999; display: flex; justify-content: center; align-items: center; transition: opacity 1s ease, visibility 1s ease; }
         .loader-rune { width: 150px; height: 150px; color: var(--magic-altus); filter: drop-shadow(0 0 15px var(--magic-altus)); animation: pulse-gold 2s infinite alternate; }
         @keyframes pulse-gold { from { filter: drop-shadow(0 0 5px var(--magic-altus)) brightness(0.8); transform: scale(0.95); } to { filter: drop-shadow(0 0 30px var(--magic-altus)) brightness(1.3); transform: scale(1.05); } }
 
@@ -39,35 +39,31 @@
         .shattered-rune { width: 60px; height: 60px; }
 
         /* --- HUD ELDEN RING (BARRE FLUIDE) --- */
-        .hud-container { position: fixed; top: 40px; left: 40px; z-index: 900; display: flex; flex-direction: column; gap: 12px; pointer-events: none; }
+        .hud-container { position: fixed; top: 40px; left: 40px; z-index: 900; display: flex; flex-direction: column; gap: 12px; pointer-events: none; transform-origin: top left; transition: 0.3s; }
         .stat-bar-bg { background: rgba(15, 15, 15, 0.85); border: 2px solid rgba(197, 160, 89, 0.4); border-radius: 4px; height: 18px; box-shadow: 0 5px 15px rgba(0,0,0,0.9), inset 0 0 5px rgba(0,0,0,1); overflow: hidden; display: flex; justify-content: flex-start; position: relative; }
         .stat-bar-fill { height: 100%; transition: width 0.2s linear; position: relative; background-size: 200% 100%; animation: fluidFlow 3s linear infinite; }
         .stat-bar-fill::after { content: ''; position: absolute; top: 0; left: 0; right: 0; height: 35%; background: linear-gradient(180deg, rgba(255,255,255,0.25) 0%, rgba(255,255,255,0) 100%); }
-        
         @keyframes fluidFlow { 0% { background-position: 100% 0; } 100% { background-position: 0 0; } }
-
-        .hp-bg { width: 400px; } .fp-bg { width: 260px; } .st-bg { width: 320px; }
+        
+        .hp-bg { width: 400px; max-width: 80vw; } .fp-bg { width: 260px; max-width: 60vw; } .st-bg { width: 320px; max-width: 70vw; }
         .hp-fill { width: 100%; background-image: linear-gradient(90deg, #600000, #ff1a1a, #600000, #ff1a1a, #600000); box-shadow: inset 0 -3px 5px rgba(0,0,0,0.5), 0 0 15px rgba(255, 42, 42, 0.4); }
         .fp-fill { width: 100%; background-image: linear-gradient(90deg, #0f4c75, #2eb5ff, #0f4c75, #2eb5ff, #0f4c75); box-shadow: inset 0 -3px 5px rgba(0,0,0,0.5), 0 0 15px rgba(50, 130, 184, 0.4); }
         .st-fill { width: 100%; background-image: linear-gradient(90deg, #123324, #36b579, #123324, #36b579, #123324); box-shadow: inset 0 -3px 5px rgba(0,0,0,0.5), 0 0 15px rgba(45, 106, 79, 0.4); }
-        @media (max-width: 768px) { .hud-container { top: 20px; left: 20px; transform: scale(0.6); transform-origin: top left; } .home-btn-container { top: 15px; } .shattered-rune { width: 45px; height: 45px; } }
 
-        /* --- SWITCHER LINGUA --- */
-        .lang-switch { position: fixed; top: 40px; right: 40px; z-index: 1000; font-family: var(--font-title); font-size: 1.2rem; display: flex; gap: 10px; align-items: center; background: rgba(0,0,0,0.5); padding: 5px 15px; border: 1px solid rgba(197, 160, 89, 0.3); border-radius: 4px; backdrop-filter: blur(5px); }
+        /* --- SWITCHER LINGUA E MAPPA --- */
+        .lang-switch { position: fixed; top: 40px; right: 40px; z-index: 1000; font-family: var(--font-title); font-size: 1.2rem; display: flex; gap: 10px; align-items: center; background: rgba(0,0,0,0.5); padding: 5px 15px; border: 1px solid rgba(197, 160, 89, 0.3); border-radius: 4px; backdrop-filter: blur(5px); transition: 0.3s; }
         .lang-btn { background: none; border: none; color: var(--text-muted); cursor: pointer; font-family: inherit; font-size: inherit; transition: 0.3s; letter-spacing: 2px; }
         .lang-btn:hover { color: #fff; text-shadow: 0 0 10px #fff; }
         .lang-btn.active { color: var(--magic-altus); text-shadow: 0 0 10px var(--magic-altus); pointer-events: none; }
         .map-nav-btn { color: var(--magic-cime); text-shadow: 0 0 5px var(--magic-cime); }
         .map-nav-btn:hover { color: #fff; text-shadow: 0 0 15px #fff; }
-        @media (max-width: 768px) { .lang-switch { top: 20px; right: 20px; font-size: 0.9rem; } }
 
         .scrambling { color: var(--magic-altus) !important; text-shadow: 0 0 15px var(--magic-altus), 0 0 30px var(--magic-altus) !important; font-family: var(--font-runic), var(--font-title), serif !important; transition: none !important; }
 
-        /* --- SISTEMA SPA --- */
+        /* --- SISTEMA SPA E SFONDI --- */
         .view { display: none; opacity: 0; transition: opacity 0.8s cubic-bezier(0.4, 0, 0.2, 1); min-height: 100vh; width: 100%; position: relative; }
         .view.active { display: block; opacity: 1; }
 
-        /* --- SFONDI GENERATI --- */
         #view-sepolcri { background: linear-gradient(rgba(5,5,5,0.8), rgba(5,5,5,0.8)), url('https://images.unsplash.com/photo-1448375240586-882707db888b?auto=format&fit=crop&q=80&w=1920') no-repeat center/cover; background-attachment: fixed; animation: magicGlowSepolcri 10s infinite alternate; }
         #view-nokron { background: linear-gradient(rgba(5,5,5,0.85), rgba(5,5,5,0.85)), url('https://images.unsplash.com/photo-1506318137071-a8e063b4bec0?auto=format&fit=crop&q=80&w=1920') no-repeat center/cover; background-attachment: fixed; animation: magicGlowNokron 10s infinite alternate; }
         #view-altus { background: linear-gradient(rgba(5,5,5,0.8), rgba(5,5,5,0.8)), url('https://images.unsplash.com/photo-1441974231531-c6227db76b6e?auto=format&fit=crop&q=80&w=1920') no-repeat center/cover; background-attachment: fixed; animation: magicGlowAltus 10s infinite alternate; }
@@ -75,27 +71,26 @@
         #view-cime { background: linear-gradient(rgba(5,5,5,0.8), rgba(5,5,5,0.8)), url('https://images.unsplash.com/photo-1454496522488-7a8e488e8606?auto=format&fit=crop&q=80&w=1920') no-repeat center/cover; background-attachment: fixed; animation: magicGlowCime 10s infinite alternate; }
 
         /* --- HERO --- */
-        .hero { height: 100vh; display: flex; flex-direction: column; justify-content: center; align-items: center; text-align: center; background: radial-gradient(circle at center, transparent 0%, var(--bg-color) 90%), url('https://images.unsplash.com/photo-1534447677768-be436bb09401?auto=format&fit=crop&q=80&w=1920') no-repeat center/cover; position: relative; z-index: 5; }
+        .hero { height: 100vh; min-height: 500px; display: flex; flex-direction: column; justify-content: center; align-items: center; text-align: center; background: radial-gradient(circle at center, transparent 0%, var(--bg-color) 90%), url('https://images.unsplash.com/photo-1534447677768-be436bb09401?auto=format&fit=crop&q=80&w=1920') no-repeat center/cover; position: relative; z-index: 5; padding: 20px; }
         .title { font-family: var(--font-title); font-size: clamp(2rem, 6vw, 4.5rem); letter-spacing: 6px; color: var(--magic-altus); text-shadow: 0 0 30px rgba(197, 160, 89, 0.4); margin-bottom: 0; }
-        .runic-name { font-family: var(--font-runic); font-size: clamp(2rem, 5vw, 3rem); letter-spacing: 15px; color: var(--magic-altus); animation: runic-glow 3s infinite alternate; margin-top: 10px; margin-bottom: 30px; }
+        .runic-name { font-family: var(--font-runic); font-size: clamp(1.5rem, 5vw, 3rem); letter-spacing: clamp(5px, 2vw, 15px); color: var(--magic-altus); animation: runic-glow 3s infinite alternate; margin-top: 10px; margin-bottom: 30px; word-break: break-all; }
         @keyframes runic-glow { from { text-shadow: 0 0 5px var(--magic-altus), 0 0 10px var(--magic-altus); opacity: 0.8; } to { text-shadow: 0 0 20px var(--magic-altus), 0 0 40px var(--magic-altus), 0 0 60px #fff; opacity: 1; } }
-        .manifesto { font-size: 1.5rem; font-style: italic; color: #fff; text-shadow: 0 2px 10px #000, 0 0 20px #000; background: rgba(0,0,0,0.5); padding: 15px 30px; border-radius: 4px; border-left: 2px solid var(--magic-altus); border-right: 2px solid var(--magic-altus); backdrop-filter: blur(4px); box-shadow: 0 10px 30px rgba(0,0,0,0.8); }
-        .scroll-down { position: absolute; bottom: 40px; color: var(--magic-altus); font-family: var(--font-title); text-decoration: none; letter-spacing: 2px; animation: pulse 2s infinite; text-shadow: 0 0 10px #000; }
+        .manifesto { font-size: clamp(1.1rem, 3vw, 1.5rem); font-style: italic; color: #fff; text-shadow: 0 2px 10px #000; background: rgba(0,0,0,0.5); padding: 15px 25px; border-radius: 4px; border-left: 2px solid var(--magic-altus); border-right: 2px solid var(--magic-altus); backdrop-filter: blur(4px); box-shadow: 0 10px 30px rgba(0,0,0,0.8); max-width: 90%; }
+        .scroll-down { position: absolute; bottom: 30px; color: var(--magic-altus); font-family: var(--font-title); text-decoration: none; letter-spacing: 2px; animation: pulse 2s infinite; text-shadow: 0 0 10px #000; font-size: clamp(0.9rem, 2vw, 1rem); }
 
-        /* ================= IL MOTORE STAR TRAIL (VOLTA CELESTE) ================= */
+        /* --- MOTORE STAR TRAIL E WRAPPER --- */
         .lands-between-wrapper { position: relative; width: 100%; background: #000; overflow: hidden; }
         #star-trail-canvas { position: absolute; top: 0; left: 0; width: 100%; height: 100%; z-index: 0; pointer-events: none; }
 
         /* --- MAPPA CON CONFINI MAGICI --- */
         .map-section { padding: 80px 20px 40px; display: flex; flex-direction: column; align-items: center; position: relative; z-index: 5; }
-        .section-title { font-family: var(--font-title); font-size: 2.5rem; letter-spacing: 4px; color: var(--text-muted); margin-bottom: 40px; text-align: center; text-shadow: 0 0 10px #000; }
+        .section-title { font-family: var(--font-title); font-size: clamp(1.8rem, 5vw, 2.5rem); letter-spacing: 4px; color: var(--text-muted); margin-bottom: 40px; text-align: center; text-shadow: 0 0 10px #000; }
         .map-container { position: relative; width: 100%; max-width: 900px; mask-image: radial-gradient(circle, black 95%, transparent 100%); -webkit-mask-image: radial-gradient(circle, black 95%, transparent 100%); border-radius: 10px; box-shadow: 0 0 50px rgba(0,0,0,0.8); }
         .map-image { display: block; width: 100%; height: auto; filter: sepia(0.2) brightness(0.8) contrast(1.1); border-radius: 10px; }
         .map-svg-overlay { position: absolute; top: 0; left: 0; width: 100%; height: 100%; z-index: 10; pointer-events: none; }
-        
         .map-region { fill: rgba(0,0,0,0); stroke: rgba(0,0,0,0); stroke-width: 2; cursor: pointer; transition: all 0.4s cubic-bezier(0.23, 1, 0.32, 1); pointer-events: auto; }
         
-        /* I tracciati precisi sulla tua immagine custom */
+        /* Tracciati SVG Mappa */
         .path-nokron { d: path('M 80,100 L 250,70 L 380,100 L 470,250 L 460,430 L 350,510 L 200,530 L 70,420 L 50,250 Z'); }
         .path-sepolcri { d: path('M 70,550 L 180,550 L 250,530 L 350,520 L 440,560 L 520,680 L 520,780 L 450,900 L 250,940 L 80,900 L 50,750 Z'); }
         .path-altus { d: path('M 420,200 L 550,150 L 680,200 L 720,320 L 720,480 L 650,550 L 550,650 L 470,530 L 400,420 Z'); }
@@ -108,29 +103,31 @@
         .region-hover-forgia:hover, #forgia:hover { fill: rgba(178, 76, 61, 0.3); stroke: var(--magic-forgia); filter: drop-shadow(0 0 15px var(--magic-forgia)); }
         .region-hover-cime:hover, #cime:hover { fill: rgba(224, 224, 224, 0.3); stroke: var(--magic-cime); filter: drop-shadow(0 0 15px var(--magic-cime)); }
 
-        /* --- PREVIEW CARDS (CENTRATE E IMPONENTI) --- */
+        /* --- PREVIEW CARDS CON INCANTESIMI MAGICI --- */
         .preview-section { padding: 40px 20px 100px; max-width: 800px; margin: 0 auto; display: flex; flex-direction: column; gap: 30px; align-items: center; width: 100%; position: relative; z-index: 5; }
         .preview-card { background: rgba(10, 10, 9, 0.85); border: 1px solid rgba(255,255,255,0.05); width: 100%; padding: 40px 20px; cursor: pointer; position: relative; overflow: hidden; backdrop-filter: blur(8px); display: flex; flex-direction: column; align-items: center; text-align: center; transition: 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275); }
         .preview-card:hover { transform: translateY(-10px); box-shadow: 0 15px 40px rgba(0,0,0,1); }
         
-        .preview-rune { font-size: 4rem; margin-bottom: 15px; color: var(--text-muted); transition: 0.4s ease; text-shadow: 0 0 10px rgba(0,0,0,0.8); position: relative; z-index: 2; }
+        .preview-rune { font-size: clamp(3rem, 6vw, 4rem); margin-bottom: 15px; color: var(--text-muted); transition: 0.4s ease; text-shadow: 0 0 10px rgba(0,0,0,0.8); position: relative; z-index: 2; }
         .preview-card:hover .preview-rune { color: inherit; text-shadow: 0 0 20px currentColor; animation: glint 1.5s infinite alternate; }
         .preview-text { display: flex; flex-direction: column; align-items: center; position: relative; z-index: 2; }
-        .preview-title { font-family: var(--font-title); font-size: 2.2rem; letter-spacing: 4px; margin-bottom: 5px; color: #fff; }
-        .preview-desc { font-size: 1.15rem; color: var(--text-muted); font-style: italic; }
+        .preview-title { font-family: var(--font-title); font-size: clamp(1.8rem, 5vw, 2.2rem); letter-spacing: 4px; margin-bottom: 5px; color: #fff; }
+        .preview-desc { font-size: clamp(1rem, 3vw, 1.15rem); color: var(--text-muted); font-style: italic; }
 
-        /* Magia Preview Card */
-        .preview-card.sepolcri::before { content: ''; position: absolute; bottom: 0; left: 0; width: 100%; height: 200%; background-image: url("data:image/svg+xml,%3Csvg width='100%25' height='100%25' viewBox='0 0 100 200' preserveAspectRatio='none' xmlns='http://www.w3.org/2000/svg'%3E%3Cpath d='M10,200 C30,150 -10,100 20,50 C40,0 0,-50 10,-100' fill='none' stroke='%233d8c4c' stroke-width='2' opacity='0.7'/%3E%3Cpath d='M90,200 C70,150 110,100 80,50 C60,0 100,-50 90,-100' fill='none' stroke='%233d8c4c' stroke-width='2' opacity='0.7'/%3E%3Ccircle cx='15' cy='150' r='3' fill='%233d8c4c'/%3E%3C/svg%3E"); background-size: 100% 50%; opacity: 0; pointer-events: none; z-index: 1; }
+        /* Magia 1: Sepolcri */
+        .preview-card.sepolcri::before { content: ''; position: absolute; bottom: 0; left: 0; width: 100%; height: 200%; background-image: url("data:image/svg+xml,%3Csvg width='100%25' height='100%25' viewBox='0 0 100 200' preserveAspectRatio='none' xmlns='http://www.w3.org/2000/svg'%3E%3Cpath d='M10,200 C30,150 -10,100 20,50 C40,0 0,-50 10,-100' fill='none' stroke='%233d8c4c' stroke-width='2' opacity='0.7'/%3E%3Cpath d='M90,200 C70,150 110,100 80,50 C60,0 100,-50 90,-100' fill='none' stroke='%233d8c4c' stroke-width='2' opacity='0.7'/%3E%3Ccircle cx='15' cy='150' r='3' fill='%233d8c4c'/%3E%3Ccircle cx='85' cy='70' r='4' fill='%233d8c4c'/%3E%3C/svg%3E"); background-size: 100% 50%; opacity: 0; pointer-events: none; z-index: 1; }
         .preview-card.sepolcri:hover { border-bottom: 4px solid var(--magic-sepolcri); }
         .preview-card.sepolcri:hover::before { opacity: 0.6; filter: drop-shadow(0 0 10px var(--magic-sepolcri)); animation: creep-vines 4s linear infinite; }
         @keyframes creep-vines { 0% { background-position: 0 100%; } 100% { background-position: 0 0; } }
 
+        /* Magia 2: Nokron */
         .preview-card.nokron::before, .preview-card.nokron::after { content: ''; position: absolute; width: 4px; height: 4px; background: transparent; border-radius: 50%; pointer-events: none; z-index: 1; opacity: 0; }
         .preview-card.nokron:hover { border-bottom: 4px solid var(--magic-nokron); }
         .preview-card.nokron:hover::before { box-shadow: 10vw 20px var(--magic-nokron), 50vw 100px #fff, 80vw 40px var(--magic-nokron), 30vw 150px #fff, 90vw 80px var(--magic-nokron), 20vw 200px #fff, 40vw 180px var(--magic-nokron); animation: nokron-up 2.5s linear infinite; }
         .preview-card.nokron:hover::after { box-shadow: 25vw 120px #fff, 85vw 30px var(--magic-nokron), 45vw 170px #fff, 65vw 50px var(--magic-nokron), 15vw 210px #fff; animation: nokron-up 4s linear infinite; }
         @keyframes nokron-up { 0% { transform: translateY(100px); opacity: 0; } 20% { opacity: 1; filter: drop-shadow(0 0 10px var(--magic-nokron)); } 80% { opacity: 1; } 100% { transform: translateY(-200px); opacity: 0; } }
 
+        /* Magia 3: Altus */
         .preview-card.altus::before, .preview-card.altus::after { content: ''; position: absolute; top: -10%; bottom: -10%; width: 25px; background: var(--magic-altus); opacity: 0; pointer-events: none; z-index: 1; filter: drop-shadow(0 0 12px var(--magic-altus)); }
         .preview-card.altus::before { left: 10%; clip-path: polygon(40% 0, 80% 0, 45% 45%, 90% 45%, 10% 100%, 40% 55%, 0 55%); }
         .preview-card.altus::after { right: 10%; clip-path: polygon(60% 0, 100% 0, 65% 45%, 100% 45%, 20% 100%, 50% 55%, 10% 55%); transform: scaleY(-1); }
@@ -139,6 +136,7 @@
         .preview-card.altus:hover::after { animation: altus-strike 1.3s infinite 0.4s; }
         @keyframes altus-strike { 0%, 90%, 100% { opacity: 0; transform: scale(1.1) translateX(0); } 92% { opacity: 1; transform: scale(1.1) translateX(-10px); background: #fff; } 94% { opacity: 0; } 96% { opacity: 0.8; transform: scale(1.1) translateX(10px); background: var(--magic-altus); } }
 
+        /* Magia 4: Forgia */
         .preview-card.forgia::before, .preview-card.forgia::after { content: ''; position: absolute; bottom: -20px; width: 150%; height: 120px; filter: blur(12px); opacity: 0; pointer-events: none; z-index: 1; left: -25%; }
         .preview-card.forgia::before { background: radial-gradient(ellipse at center bottom, var(--magic-forgia) 0%, transparent 60%); }
         .preview-card.forgia::after { background: repeating-linear-gradient(to right, transparent, var(--magic-forgia) 10%, transparent 20%); mix-blend-mode: screen; }
@@ -148,72 +146,104 @@
         @keyframes forge-burn { from { transform: scaleY(1); } to { transform: scaleY(1.8); } }
         @keyframes forge-dance { from { transform: translateX(-10px) scaleY(1.2); } to { transform: translateX(10px) scaleY(1.6); } }
 
+        /* Magia 5: Cime */
         .preview-card.cime::before { content: ''; position: absolute; bottom: 0; left: 0; width: 100%; height: 100%; background: linear-gradient(to top, rgba(224, 224, 224, 0.4), transparent 70%); clip-path: polygon(0 100%, 15% 65%, 30% 100%, 50% 50%, 70% 100%, 85% 70%, 100% 100%); transform: translateY(100%); transition: transform 0.5s cubic-bezier(0.175, 0.885, 0.32, 1.275); pointer-events: none; z-index: 1; }
         .preview-card.cime:hover { border-bottom: 4px solid var(--magic-cime); box-shadow: inset 0 -30px 40px rgba(224,224,224,0.15), 0 15px 40px rgba(0,0,0,1); }
         .preview-card.cime:hover::before { transform: translateY(0); filter: drop-shadow(0 -5px 15px #fff); animation: cime-breath 3s infinite alternate ease-in-out; }
         @keyframes cime-breath { from { transform: translateY(10px); opacity: 0.7; } to { transform: translateY(-5px); opacity: 1; } }
 
-        /* --- MODAL MAPPA GLOBALE --- */
+        /* --- MODAL MAPPA GLOBALE E LORE OVERLAY --- */
         .map-modal { position: fixed; top: 0; left: 0; width: 100%; height: 100%; background-color: rgba(5, 5, 5, 0.98); z-index: 1001; display: flex; justify-content: center; align-items: center; opacity: 0; visibility: hidden; transition: 0.4s ease; backdrop-filter: blur(15px); }
         .map-modal.active { opacity: 1; visibility: visible; }
         .map-modal-content { width: 95%; max-width: 900px; position: relative; display: flex; flex-direction: column; align-items: center; }
-
-        /* --- OVERLAY DELLA MAPPA / LORE --- */
-        .overlay { position: fixed; top: 0; left: 0; width: 100%; height: 100%; background-color: rgba(5, 5, 5, 0.96); z-index: 1002; display: flex; justify-content: center; align-items: center; opacity: 0; visibility: hidden; transition: 0.5s cubic-bezier(0.4, 0, 0.2, 1); backdrop-filter: blur(12px); }
+        
+        .overlay { position: fixed; top: 0; left: 0; width: 100%; height: 100%; background-color: rgba(5, 5, 5, 0.96); z-index: 1002; display: flex; justify-content: center; align-items: center; opacity: 0; visibility: hidden; transition: 0.5s cubic-bezier(0.4, 0, 0.2, 1); backdrop-filter: blur(12px); padding: 20px; }
         .overlay.active { opacity: 1; visibility: visible; }
-        .realm-card { background-color: #0c0c0b; border: 1.5px solid var(--region-color); padding: 50px 40px; max-width: 600px; width: 90%; text-align: center; transform: translateY(40px) scale(0.95); transition: 0.5s cubic-bezier(0.34, 1.56, 0.64, 1); box-shadow: 0 0 60px rgba(0,0,0,1), inset 0 0 25px rgba(0,0,0,0.7); position: relative; }
+        .realm-card { background-color: #0c0c0b; border: 1.5px solid var(--region-color); padding: 50px 40px; max-width: 600px; width: 100%; text-align: center; transform: translateY(40px) scale(0.95); transition: 0.5s cubic-bezier(0.34, 1.56, 0.64, 1); box-shadow: 0 0 60px rgba(0,0,0,1), inset 0 0 25px rgba(0,0,0,0.7); position: relative; max-height: 90vh; overflow-y: auto; }
         .overlay.active .realm-card { transform: translateY(0) scale(1); }
         .realm-card::after { content: ''; position: absolute; top: -5px; left: -5px; right: -5px; bottom: -5px; border: 1px solid rgba(255,255,255,0.05); animation: runicPulse 3s infinite; pointer-events: none; }
-        .card-rune { font-size: 3.5rem; color: var(--region-color); display: block; text-shadow: 0 0 20px var(--region-color), 0 0 10px var(--region-color); animation: glint 2s infinite alternate, subtleRotate 8s infinite linear; }
-        .card-title { font-family: var(--font-title); font-size: 2.5rem; color: #fff; letter-spacing: 4px; margin-bottom: 5px; text-shadow: 0 0 15px rgba(255,255,255,0.2); }
-        .card-subtitle { font-family: var(--font-title); font-size: 1rem; color: var(--region-color); letter-spacing: 2px; margin-bottom: 25px; }
-        .card-desc { font-size: 1.25rem; color: var(--text-muted); margin-bottom: 40px; line-height: 1.6; }
-        .enter-btn { font-family: var(--font-title); background: transparent; border: 1px solid var(--region-color); color: var(--region-color); padding: 12px 35px; letter-spacing: 2px; text-transform: uppercase; cursor: pointer; transition: 0.3s cubic-bezier(0.4, 0, 0.2, 1); display: inline-block; box-shadow: inset 0 0 10px rgba(0,0,0,0.5); }
+        
+        .card-rune { font-size: clamp(2.5rem, 5vw, 3.5rem); color: var(--region-color); display: block; text-shadow: 0 0 20px var(--region-color); animation: glint 2s infinite alternate, subtleRotate 8s infinite linear; margin-bottom: 10px; }
+        .card-title { font-family: var(--font-title); font-size: clamp(1.8rem, 5vw, 2.5rem); color: #fff; letter-spacing: 4px; margin-bottom: 5px; text-shadow: 0 0 15px rgba(255,255,255,0.2); }
+        .card-subtitle { font-family: var(--font-title); font-size: clamp(0.9rem, 3vw, 1rem); color: var(--region-color); letter-spacing: 2px; margin-bottom: 25px; }
+        .card-desc { font-size: clamp(1rem, 3vw, 1.25rem); color: var(--text-muted); margin-bottom: 40px; line-height: 1.6; }
+        
+        .enter-btn { font-family: var(--font-title); background: transparent; border: 1px solid var(--region-color); color: var(--region-color); padding: 12px 35px; letter-spacing: 2px; text-transform: uppercase; cursor: pointer; transition: 0.3s; display: inline-block; box-shadow: inset 0 0 10px rgba(0,0,0,0.5); font-size: clamp(0.8rem, 2vw, 1rem); }
         .enter-btn:hover { background: var(--region-color); color: #000; box-shadow: 0 0 25px var(--region-color), inset 0 0 15px rgba(255,255,255,0.2); }
-        .close-overlay { position: absolute; top: 15px; right: 25px; background: none; border: none; color: var(--text-muted); font-size: 2rem; cursor: pointer; transition: color 0.3s ease; }
+        .close-overlay { position: absolute; top: 15px; right: 25px; background: none; border: none; color: var(--text-muted); font-size: 2rem; cursor: pointer; transition: 0.3s; z-index: 10; }
         .close-overlay:hover { color: var(--region-color); }
 
-        /* --- STILI DELLE PAGINE INTERNE E PROJECT CARDS --- */
+        /* --- STILI DELLE PAGINE INTERNE --- */
         .page-wrapper { min-height: 100vh; display: flex; flex-direction: column; align-items: center; padding-bottom: 100px; position: relative; z-index: 10; }
         .region-header { text-align: center; padding: 100px 20px 40px; width: 100%; border-bottom: 1px solid rgba(255,255,255,0.05); background: linear-gradient(180deg, rgba(5,5,5,0.9), transparent); }
-        .region-rune { font-size: 5rem; text-shadow: 0 0 30px currentColor, 0 0 15px currentColor; margin-bottom: 10px; animation: glint 3s infinite alternate; }
-        .region-title { font-family: var(--font-title); font-size: 4rem; letter-spacing: 6px; color: #fff; margin-bottom: 5px; text-shadow: 0 0 20px rgba(255,255,255,0.2); }
-        .region-subtitle { font-family: var(--font-title); font-size: 1.2rem; letter-spacing: 3px; text-transform: uppercase; }
-        .content-area { max-width: 1100px; width: 100%; padding: 60px 20px; text-align: center; }
-        .lore-text { font-size: 1.5rem; color: var(--text-main); font-style: italic; margin-bottom: 80px; line-height: 1.8; text-shadow: 0 2px 5px rgba(0,0,0,0.9); }
+        .region-rune { font-size: clamp(3.5rem, 8vw, 5rem); text-shadow: 0 0 30px currentColor; margin-bottom: 10px; animation: glint 3s infinite alternate; }
+        .region-title { font-family: var(--font-title); font-size: clamp(2.5rem, 8vw, 4rem); letter-spacing: 6px; color: #fff; margin-bottom: 5px; text-shadow: 0 0 20px rgba(255,255,255,0.2); }
+        .region-subtitle { font-family: var(--font-title); font-size: clamp(1rem, 3vw, 1.2rem); letter-spacing: 3px; text-transform: uppercase; }
         
-        .project-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(320px, 1fr)); gap: 40px; text-align: left; }
-        .project-card-inner { background: rgba(10, 10, 9, 0.85); border: 1px solid rgba(255,255,255,0.1); display: flex; flex-direction: column; transition: 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275); backdrop-filter: blur(8px); position: relative; overflow: hidden; box-shadow: 0 10px 30px rgba(0,0,0,0.8); height: 100%; }
+        .content-area { max-width: 1100px; width: 100%; padding: 60px 20px; text-align: center; }
+        .lore-text { font-size: clamp(1.2rem, 4vw, 1.5rem); color: var(--text-main); font-style: italic; margin-bottom: 60px; line-height: 1.8; text-shadow: 0 2px 5px rgba(0,0,0,0.9); }
+        
+        .project-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)); gap: 40px; text-align: left; }
+        .project-card-inner { background: rgba(10, 10, 9, 0.85); border: 1px solid rgba(255,255,255,0.1); display: flex; flex-direction: column; transition: 0.4s; backdrop-filter: blur(8px); position: relative; overflow: hidden; box-shadow: 0 10px 30px rgba(0,0,0,0.8); height: 100%; }
         .project-card-inner:hover { transform: translateY(-10px); border-color: currentColor; box-shadow: 0 15px 40px rgba(0,0,0,0.9), 0 0 20px currentColor; }
+        
         .card-image-wrapper { width: 100%; height: 200px; overflow: hidden; position: relative; border-bottom: 1px solid rgba(255,255,255,0.05); }
         .card-image-wrapper img { width: 100%; height: 100%; object-fit: cover; filter: sepia(0.4) brightness(0.6) contrast(1.2); transition: 0.5s ease; }
         .project-card-inner:hover .card-image-wrapper img { transform: scale(1.08); filter: sepia(0.2) brightness(0.9) contrast(1.1); }
+        
         .card-overlay-btn { position: absolute; top: 50%; left: 50%; transform: translate(-50%, -50%); background: rgba(0,0,0,0.8); border: 1px solid currentColor; color: #fff; font-family: var(--font-title); padding: 10px 25px; letter-spacing: 2px; text-transform: uppercase; font-size: 0.9rem; opacity: 0; transition: 0.3s ease; text-decoration: none; }
         .project-card-inner:hover .card-overlay-btn { opacity: 1; }
         .card-overlay-btn:hover { background: currentColor; color: #000; box-shadow: 0 0 15px currentColor; }
+
         .card-content { padding: 30px; display: flex; flex-direction: column; flex-grow: 1; }
-        .card-tags { font-family: var(--font-title); font-size: 0.75rem; letter-spacing: 2px; text-transform: uppercase; color: currentColor; margin-bottom: 15px; display: flex; gap: 10px; }
+        .card-tags { font-family: var(--font-title); font-size: 0.75rem; letter-spacing: 2px; text-transform: uppercase; color: currentColor; margin-bottom: 15px; display: flex; gap: 10px; flex-wrap: wrap; }
         .card-tags span { border-bottom: 1px solid currentColor; padding-bottom: 2px; }
         .project-card-inner h3 { font-family: var(--font-title); color: #fff; font-size: 1.6rem; margin-bottom: 10px; letter-spacing: 1px; }
         .item-lore { font-style: italic; color: var(--text-muted); font-size: 1.1rem; margin-bottom: 20px; line-height: 1.5; border-left: 2px solid rgba(255,255,255,0.1); padding-left: 15px; }
         .item-desc { font-size: 1.15rem; color: #b5b5b5; line-height: 1.6; margin-bottom: 0; }
         
         .back-nav { margin-top: 80px; }
-        .btn-back-home { font-family: var(--font-title); border: 1px solid var(--text-muted); color: var(--text-muted); padding: 12px 30px; letter-spacing: 2px; text-transform: uppercase; cursor: pointer; background: transparent; transition: 0.3s; box-shadow: inset 0 0 8px rgba(0,0,0,0.4); }
+        .btn-back-home { font-family: var(--font-title); border: 1px solid var(--text-muted); color: var(--text-muted); padding: 12px 30px; letter-spacing: 2px; text-transform: uppercase; cursor: pointer; background: transparent; transition: 0.3s; box-shadow: inset 0 0 8px rgba(0,0,0,0.4); font-size: clamp(0.8rem, 2vw, 1rem); }
         .btn-back-home:hover { border-color: #fff; color: #fff; background: rgba(255,255,255,0.06); box-shadow: 0 0 15px rgba(255,255,255,0.1), inset 0 0 10px rgba(255,255,255,0.02); }
 
-        /* Colori Dinamici Interni per le Cards e i Testi */
+        /* Colori Dinamici Interni */
         #view-sepolcri .region-rune, #view-sepolcri .region-subtitle, #view-sepolcri .project-card-inner, #view-sepolcri .card-tags, #view-sepolcri .card-overlay-btn { color: var(--magic-sepolcri); }
         #view-nokron .region-rune, #view-nokron .region-subtitle, #view-nokron .project-card-inner, #view-nokron .card-tags, #view-nokron .card-overlay-btn { color: var(--magic-nokron); }
         #view-altus .region-rune, #view-altus .region-subtitle, #view-altus .project-card-inner, #view-altus .card-tags, #view-altus .card-overlay-btn { color: var(--magic-altus); }
         #view-forgia .region-rune, #view-forgia .region-subtitle, #view-forgia .project-card-inner, #view-forgia .card-tags, #view-forgia .card-overlay-btn { color: var(--magic-forgia); }
         #view-cime .region-rune, #view-cime .region-subtitle, #view-cime .project-card-inner, #view-cime .card-tags, #view-cime .card-overlay-btn { color: var(--magic-cime); }
 
-        /* ANIMAZIONI DI SUPPORTO */
+        /* RESPONSIVE AGGIUNTIVO */
+        @media (max-width: 768px) {
+            .lang-switch { top: 15px; right: 15px; padding: 5px 10px; font-size: 0.9rem; }
+            .hud-container { top: 15px; left: 15px; transform: scale(0.55); }
+            .home-btn-container { top: 15px; }
+            .shattered-rune { width: 45px; height: 45px; }
+            
+            .map-section { padding: 60px 15px 30px; }
+            .preview-section { padding: 30px 15px 80px; gap: 20px; }
+            .preview-card { padding: 30px 15px; }
+            
+            .realm-card { padding: 30px 20px; }
+            .close-overlay { top: 10px; right: 15px; font-size: 1.5rem; }
+            
+            .project-grid { grid-template-columns: 1fr; }
+        }
+        @media (max-width: 480px) {
+            .hud-container { transform: scale(0.45); }
+            .lang-switch { font-size: 0.8rem; gap: 5px; }
+        }
+
+        /* ANIMAZIONI DI BASE */
         @keyframes pulse { 0% { opacity: 0.5; } 50% { opacity: 1; } 100% { opacity: 0.5; } }
         @keyframes glint { from { filter: brightness(1) drop-shadow(0 0 10px currentColor); } to { filter: brightness(1.3) drop-shadow(0 0 25px currentColor); } }
         @keyframes runicPulse { 0% { border-color: rgba(255,255,255,0.05); box-shadow: 0 0 0px var(--region-color); } 50% { border-color: var(--region-color); box-shadow: 0 0 15px var(--region-color); } 100% { border-color: rgba(255,255,255,0.05); box-shadow: 0 0 0px var(--region-color); } }
         @keyframes subtleRotate { from { transform: rotate(0deg); } to { transform: rotate(360deg); } }
+        @keyframes magicGlowSepolcri { 0% { background-position: 50% 50%; } 100% { background-position: 51% 51%; filter: hue-rotate(5deg); } }
+        @keyframes magicGlowNokron { 0% { background-position: 50% 50%; } 100% { background-position: 49% 49%; filter: hue-rotate(-5deg); } }
+        @keyframes magicGlowAltus { 0% { background-position: 50% 50%; } 100% { background-position: 50.5% 50.5%; filter: brightness(1.1); } }
+        @keyframes magicGlowForgia { 0% { background-position: 50% 50%; } 100% { background-position: 49.5% 49.5%; filter: brightness(1.1) saturate(1.1); } }
+        @keyframes magicGlowCime { 0% { background-position: 50% 50%; } 100% { background-position: 50.5% 49.5%; filter: brightness(1.05) contrast(1.05); } }
     </style>
 </head>
 <body>
@@ -256,7 +286,7 @@
 
     <div id="map-modal" class="map-modal">
         <div class="map-modal-content">
-            <button class="close-overlay" onclick="toggleMapModal()" style="top: -40px;">✕</button>
+            <button class="close-overlay" onclick="toggleMapModal()" style="top: -40px; right: 0;">✕</button>
             <h2 class="section-title" data-i18n="map_title" style="color: #fff; text-shadow: 0 0 15px var(--magic-altus); margin-bottom: 20px;">La Mappa dell'Anima</h2>
             <div class="map-container">
                 <img src="mappa.jpg" alt="Map" class="map-image">
@@ -359,10 +389,7 @@
                 <p class="lore-text" data-i18n="v_sep_lore">"Dove l'aria si fa densa di nebbia, il suono diventa l'unica guida. Le frequenze scolpiscono il silenzio, creando cattedrali di vibrazioni."</p>
                 <div class="project-grid">
                     <div class="project-card-inner">
-                        <div class="card-image-wrapper">
-                            <img src="https://images.unsplash.com/photo-1510915361894-db8b60106cb1?auto=format&fit=crop&q=80&w=800" alt="Sinfonia">
-                            <a href="#" class="card-overlay-btn" data-i18n="btn_listen">Ascolta</a>
-                        </div>
+                        <div class="card-image-wrapper"><img src="https://images.unsplash.com/photo-1510915361894-db8b60106cb1?auto=format&fit=crop&q=80&w=800" alt="Sinfonia"><a href="#" class="card-overlay-btn" data-i18n="btn_listen">Ascolta</a></div>
                         <div class="card-content">
                             <div class="card-tags"><span data-i18n="tag_ambient">Ambient</span><span data-i18n="tag_acoustic">Acustica</span></div>
                             <h3 data-i18n="sep_p1_t">Sinfonia delle Rovine</h3>
@@ -371,10 +398,7 @@
                         </div>
                     </div>
                     <div class="project-card-inner">
-                        <div class="card-image-wrapper">
-                            <img src="https://images.unsplash.com/photo-1598488035139-bdbb2231ce04?auto=format&fit=crop&q=80&w=800" alt="Echi">
-                            <a href="#" class="card-overlay-btn" data-i18n="btn_examine">Esamina</a>
-                        </div>
+                        <div class="card-image-wrapper"><img src="https://images.unsplash.com/photo-1598488035139-bdbb2231ce04?auto=format&fit=crop&q=80&w=800" alt="Echi"><a href="#" class="card-overlay-btn" data-i18n="btn_examine">Esamina</a></div>
                         <div class="card-content">
                             <div class="card-tags"><span data-i18n="tag_live">Live Set</span><span data-i18n="tag_studio">Studio</span></div>
                             <h3 data-i18n="sep_p2_t">Echi dalla Nebbia</h3>
@@ -398,10 +422,7 @@
                 <p class="lore-text" data-i18n="v_nok_lore">"Sotto un cielo di stelle fredde, il tratto diventa inchiostro cosmico. Qui l'immaginazione si cristallizza in forme eteree."</p>
                 <div class="project-grid">
                     <div class="project-card-inner">
-                        <div class="card-image-wrapper">
-                            <img src="https://images.unsplash.com/photo-1513364776144-60967b0f800f?auto=format&fit=crop&q=80&w=800" alt="Volto">
-                            <a href="#" class="card-overlay-btn" data-i18n="btn_observe">Osserva</a>
-                        </div>
+                        <div class="card-image-wrapper"><img src="https://images.unsplash.com/photo-1513364776144-60967b0f800f?auto=format&fit=crop&q=80&w=800" alt="Volto"><a href="#" class="card-overlay-btn" data-i18n="btn_observe">Osserva</a></div>
                         <div class="card-content">
                             <div class="card-tags"><span data-i18n="tag_concept">Concept Art</span><span data-i18n="tag_ink">Inchiostro</span></div>
                             <h3 data-i18n="nok_p1_t">Il Volto della Stella</h3>
@@ -410,10 +431,7 @@
                         </div>
                     </div>
                     <div class="project-card-inner">
-                        <div class="card-image-wrapper">
-                            <img src="https://images.unsplash.com/photo-1550684376-efcbd6e3f031?auto=format&fit=crop&q=80&w=800" alt="Canvas">
-                            <a href="#" class="card-overlay-btn" data-i18n="btn_explore">Esplora</a>
-                        </div>
+                        <div class="card-image-wrapper"><img src="https://images.unsplash.com/photo-1550684376-efcbd6e3f031?auto=format&fit=crop&q=80&w=800" alt="Canvas"><a href="#" class="card-overlay-btn" data-i18n="btn_explore">Esplora</a></div>
                         <div class="card-content">
                             <div class="card-tags"><span data-i18n="tag_digital">Digital</span><span data-i18n="tag_sketch">Sketchbook</span></div>
                             <h3 data-i18n="nok_p2_t">Appunti di Scintipietra</h3>
@@ -437,10 +455,7 @@
                 <p class="lore-text" data-i18n="v_alt_lore">"La pura devozione per il metallo temprato, l'ossessione per la velocità e l'odore dell'olio bruciato al vento autunnale."</p>
                 <div class="project-grid">
                     <div class="project-card-inner">
-                        <div class="card-image-wrapper">
-                            <img src="https://images.unsplash.com/photo-1583121274602-3e2820c69888?auto=format&fit=crop&q=80&w=800" alt="V8">
-                            <a href="#" class="card-overlay-btn" data-i18n="btn_examine">Esamina</a>
-                        </div>
+                        <div class="card-image-wrapper"><img src="https://images.unsplash.com/photo-1583121274602-3e2820c69888?auto=format&fit=crop&q=80&w=800" alt="V8"><a href="#" class="card-overlay-btn" data-i18n="btn_examine">Esamina</a></div>
                         <div class="card-content">
                             <div class="card-tags"><span data-i18n="tag_build">Custom Build</span><span data-i18n="tag_mech">Meccanica</span></div>
                             <h3 data-i18n="alt_p1_t">Cuore di Ferro</h3>
@@ -449,10 +464,7 @@
                         </div>
                     </div>
                     <div class="project-card-inner">
-                        <div class="card-image-wrapper">
-                            <img src="https://images.unsplash.com/photo-1449426468159-d96dbf08f19f?auto=format&fit=crop&q=80&w=800" alt="Diari">
-                            <a href="#" class="card-overlay-btn" data-i18n="btn_log">Apri Diario</a>
-                        </div>
+                        <div class="card-image-wrapper"><img src="https://images.unsplash.com/photo-1449426468159-d96dbf08f19f?auto=format&fit=crop&q=80&w=800" alt="Diari"><a href="#" class="card-overlay-btn" data-i18n="btn_log">Apri Diario</a></div>
                         <div class="card-content">
                             <div class="card-tags"><span data-i18n="tag_road">On the Road</span><span data-i18n="tag_photo">Fotografia</span></div>
                             <h3 data-i18n="alt_p2_t">Pellegrinaggio d'Ambra</h3>
@@ -476,10 +488,7 @@
                 <p class="lore-text" data-i18n="v_for_lore">"Scintille, calore e incudine. È la fornace da cui nascono architetture digitali, codice grezzo e soluzioni tecniche."</p>
                 <div class="project-grid">
                     <div class="project-card-inner">
-                        <div class="card-image-wrapper">
-                            <img src="https://images.unsplash.com/photo-1555066931-4365d14bab8c?auto=format&fit=crop&q=80&w=800" alt="Web">
-                            <a href="#" class="card-overlay-btn" data-i18n="btn_inspect">Ispeziona</a>
-                        </div>
+                        <div class="card-image-wrapper"><img src="https://images.unsplash.com/photo-1555066931-4365d14bab8c?auto=format&fit=crop&q=80&w=800" alt="Web"><a href="#" class="card-overlay-btn" data-i18n="btn_inspect">Ispeziona</a></div>
                         <div class="card-content">
                             <div class="card-tags"><span data-i18n="tag_web">Web App</span><span data-i18n="tag_front">Front-end</span></div>
                             <h3 data-i18n="for_p1_t">Architettura Astrale</h3>
@@ -488,10 +497,7 @@
                         </div>
                     </div>
                     <div class="project-card-inner">
-                        <div class="card-image-wrapper">
-                            <img src="https://images.unsplash.com/photo-1518770660439-4636190af475?auto=format&fit=crop&q=80&w=800" alt="Hardware">
-                            <a href="#" class="card-overlay-btn" data-i18n="btn_analyze">Analizza</a>
-                        </div>
+                        <div class="card-image-wrapper"><img src="https://images.unsplash.com/photo-1518770660439-4636190af475?auto=format&fit=crop&q=80&w=800" alt="Hardware"><a href="#" class="card-overlay-btn" data-i18n="btn_analyze">Analizza</a></div>
                         <div class="card-content">
                             <div class="card-tags"><span data-i18n="tag_hard">Hardware</span><span data-i18n="tag_script">Scripting</span></div>
                             <h3 data-i18n="for_p2_t">Terminale Runico</h3>
@@ -515,10 +521,7 @@
                 <p class="lore-text" data-i18n="v_cim_lore">"Ghiaccio e pietra. Il luogo della disciplina inflessibile, dove temprare la carne e la volontà contro il gelo dell'esistenza."</p>
                 <div class="project-grid">
                     <div class="project-card-inner">
-                        <div class="card-image-wrapper">
-                            <img src="https://images.unsplash.com/photo-1517836357463-d25dfeac3438?auto=format&fit=crop&q=80&w=800" alt="Routine">
-                            <a href="#" class="card-overlay-btn" data-i18n="btn_read">Leggi</a>
-                        </div>
+                        <div class="card-image-wrapper"><img src="https://images.unsplash.com/photo-1517836357463-d25dfeac3438?auto=format&fit=crop&q=80&w=800" alt="Routine"><a href="#" class="card-overlay-btn" data-i18n="btn_read">Leggi</a></div>
                         <div class="card-content">
                             <div class="card-tags"><span data-i18n="tag_rout">Routine</span><span data-i18n="tag_str">Forza</span></div>
                             <h3 data-i18n="cim_p1_t">Protocollo del Gigante</h3>
@@ -527,10 +530,7 @@
                         </div>
                     </div>
                     <div class="project-card-inner">
-                        <div class="card-image-wrapper">
-                            <img src="https://images.unsplash.com/photo-1461896836934-ffe607ba8211?auto=format&fit=crop&q=80&w=800" alt="Dati">
-                            <a href="#" class="card-overlay-btn" data-i18n="btn_verify">Verifica</a>
-                        </div>
+                        <div class="card-image-wrapper"><img src="https://images.unsplash.com/photo-1461896836934-ffe607ba8211?auto=format&fit=crop&q=80&w=800" alt="Dati"><a href="#" class="card-overlay-btn" data-i18n="btn_verify">Verifica</a></div>
                         <div class="card-content">
                             <div class="card-tags"><span data-i18n="tag_data">Dati</span><span data-i18n="tag_track">Tracker</span></div>
                             <h3 data-i18n="cim_p2_t">Resistenza al Gelo</h3>
@@ -544,7 +544,7 @@
     </article>
 
     <script>
-        // --- JS MOTORE STAR TRAIL ---
+        // --- JS MOTORE STAR TRAIL OTTIMIZZATO ---
         (function() {
             const canvas = document.getElementById('star-trail-canvas');
             const ctx = canvas.getContext('2d');
@@ -555,6 +555,7 @@
             let targetRotationSpeed = 0.0005; 
             let currentRotationSpeed = targetRotationSpeed;
             let lastTime = 0;
+            let oldWidth = 0;
 
             const colors = ['#ffffff', '#ffedc2', '#a6cfff', '#c5a059', '#3d8c4c', '#4a6fa5', '#b24c3d'];
 
@@ -589,11 +590,20 @@
             }
 
             function resize() {
-                width = canvas.width = wrapper.offsetWidth;
-                height = canvas.height = wrapper.offsetHeight;
-                centerX = width * 0.65;
-                centerY = height * 0.4;
-                initStars();
+                const newWidth = wrapper.offsetWidth;
+                const newHeight = wrapper.offsetHeight;
+                
+                // Evita il reset su mobile quando la barra degli indirizzi va via (cambia solo l'altezza)
+                if (newWidth !== oldWidth || stars === undefined) {
+                    width = canvas.width = newWidth;
+                    height = canvas.height = newHeight;
+                    centerX = width * 0.65;
+                    centerY = height * 0.4;
+                    initStars();
+                    oldWidth = newWidth;
+                } else {
+                    height = canvas.height = newHeight;
+                }
             }
 
             function initStars() {
@@ -611,6 +621,7 @@
                 if (!lastTime) lastTime = time;
                 const deltaTime = (time - lastTime) / 1000; 
                 lastTime = time;
+
                 globalRotation += (targetGlobalRotation - globalRotation) * 0.05;
                 ctx.fillStyle = 'rgba(0, 0, 0, 0.03)'; 
                 ctx.fillRect(0, 0, width, height);
