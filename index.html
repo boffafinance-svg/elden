@@ -2,8 +2,17 @@
 <html lang="it">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
     <title>Gabriele D. Boffa | I Domini</title>
+    
+    <meta name="theme-color" content="#050505">
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+    <meta name="apple-mobile-web-app-title" content="I Domini">
+    
+    <link rel="icon" type="image/svg+xml" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'%3E%3Ccircle cx='35' cy='55' r='22' fill='none' stroke='%23c5a059' stroke-width='5'/%3E%3Ccircle cx='65' cy='55' r='22' fill='none' stroke='%23c5a059' stroke-width='5'/%3E%3Ccircle cx='50' cy='35' r='22' fill='none' stroke='%23c5a059' stroke-width='5'/%3E%3Cline x1='50' y1='5' x2='50' y2='95' stroke='%23c5a059' stroke-width='5'/%3E%3Cpath d='M 15 50 Q 50 100 85 50' fill='none' stroke='%23c5a059' stroke-width='5'/%3E%3C/svg%3E">
+    <link rel="apple-touch-icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'%3E%3Crect width='100' height='100' fill='%23050505'/%3E%3Ccircle cx='35' cy='55' r='22' fill='none' stroke='%23c5a059' stroke-width='5'/%3E%3Ccircle cx='65' cy='55' r='22' fill='none' stroke='%23c5a059' stroke-width='5'/%3E%3Ccircle cx='50' cy='35' r='22' fill='none' stroke='%23c5a059' stroke-width='5'/%3E%3Cline x1='50' y1='5' x2='50' y2='95' stroke='%23c5a059' stroke-width='5'/%3E%3Cpath d='M 15 50 Q 50 100 85 50' fill='none' stroke='%23c5a059' stroke-width='5'/%3E%3C/svg%3E">
+
     <link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@400;600;700&family=Cormorant+Garamond:ital,wght@0,300;0,400;1,300&display=swap" rel="stylesheet">
     <style>
         :root {
@@ -28,17 +37,16 @@
         * { box-sizing: border-box; margin: 0; padding: 0; }
         body { background-color: var(--bg-color); color: var(--text-main); font-family: var(--font-text); overflow-x: hidden; scroll-behavior: smooth; }
 
-        /* --- SCHERMATA DI CARICAMENTO (RUNA) --- */
-        #loader { position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: #000; z-index: 9999; display: flex; justify-content: center; align-items: center; transition: opacity 1s ease, visibility 1s ease; }
+        /* --- SCHERMATA CARICAMENTO E BOTTONE HOME --- */
+        #loader { position: fixed; top: 0; left: 0; width: 100%; height: 100vh; background: #000; z-index: 9999; display: flex; justify-content: center; align-items: center; transition: opacity 1s ease, visibility 1s ease; }
         .loader-rune { width: 150px; height: 150px; color: var(--magic-altus); filter: drop-shadow(0 0 15px var(--magic-altus)); animation: pulse-gold 2s infinite alternate; }
         @keyframes pulse-gold { from { filter: drop-shadow(0 0 5px var(--magic-altus)) brightness(0.8); transform: scale(0.95); } to { filter: drop-shadow(0 0 30px var(--magic-altus)) brightness(1.3); transform: scale(1.05); } }
 
-        /* --- PULSANTE HOME (RUNA FRASTAGLIATA) --- */
         .home-btn-container { position: fixed; top: 30px; left: 50%; transform: translateX(-50%); z-index: 1000; cursor: pointer; color: var(--text-muted); transition: 0.3s; opacity: 0.8; }
         .home-btn-container:hover { color: var(--magic-altus); filter: drop-shadow(0 0 15px var(--magic-altus)); opacity: 1; transform: translateX(-50%) scale(1.05); }
         .shattered-rune { width: 60px; height: 60px; }
 
-        /* --- HUD ELDEN RING (BARRE FLUIDE) --- */
+        /* --- HUD ELDEN RING --- */
         .hud-container { position: fixed; top: 40px; left: 40px; z-index: 900; display: flex; flex-direction: column; gap: 12px; pointer-events: none; transform-origin: top left; transition: 0.3s; }
         .stat-bar-bg { background: rgba(15, 15, 15, 0.85); border: 2px solid rgba(197, 160, 89, 0.4); border-radius: 4px; height: 18px; box-shadow: 0 5px 15px rgba(0,0,0,0.9), inset 0 0 5px rgba(0,0,0,1); overflow: hidden; display: flex; justify-content: flex-start; position: relative; }
         .stat-bar-fill { height: 100%; transition: width 0.2s linear; position: relative; background-size: 200% 100%; animation: fluidFlow 3s linear infinite; }
@@ -88,7 +96,8 @@
         .map-container { position: relative; width: 100%; max-width: 900px; mask-image: radial-gradient(circle, black 95%, transparent 100%); -webkit-mask-image: radial-gradient(circle, black 95%, transparent 100%); border-radius: 10px; box-shadow: 0 0 50px rgba(0,0,0,0.8); }
         .map-image { display: block; width: 100%; height: auto; filter: sepia(0.2) brightness(0.8) contrast(1.1); border-radius: 10px; }
         .map-svg-overlay { position: absolute; top: 0; left: 0; width: 100%; height: 100%; z-index: 10; pointer-events: none; }
-        .map-region { fill: rgba(0,0,0,0); stroke: rgba(0,0,0,0); stroke-width: 2; cursor: pointer; transition: all 0.4s cubic-bezier(0.23, 1, 0.32, 1); pointer-events: auto; }
+        
+        .map-region { fill: rgba(255,255,255,0.01); stroke: rgba(0,0,0,0); stroke-width: 2; cursor: pointer; transition: all 0.4s cubic-bezier(0.23, 1, 0.32, 1); pointer-events: auto; -webkit-tap-highlight-color: transparent; }
         
         /* Tracciati SVG Mappa */
         .path-nokron { d: path('M 80,100 L 250,70 L 380,100 L 470,250 L 460,430 L 350,510 L 200,530 L 70,420 L 50,250 Z'); }
@@ -103,12 +112,12 @@
         .region-hover-forgia:hover, #forgia:hover { fill: rgba(178, 76, 61, 0.3); stroke: var(--magic-forgia); filter: drop-shadow(0 0 15px var(--magic-forgia)); }
         .region-hover-cime:hover, #cime:hover { fill: rgba(224, 224, 224, 0.3); stroke: var(--magic-cime); filter: drop-shadow(0 0 15px var(--magic-cime)); }
 
-        /* --- PREVIEW CARDS CON INCANTESIMI MAGICI --- */
+        /* --- PREVIEW CARDS MAGICHE --- */
         .preview-section { padding: 40px 20px 100px; max-width: 800px; margin: 0 auto; display: flex; flex-direction: column; gap: 30px; align-items: center; width: 100%; position: relative; z-index: 5; }
-        .preview-card { background: rgba(10, 10, 9, 0.85); border: 1px solid rgba(255,255,255,0.05); width: 100%; padding: 40px 20px; cursor: pointer; position: relative; overflow: hidden; backdrop-filter: blur(8px); display: flex; flex-direction: column; align-items: center; text-align: center; transition: 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275); }
+        .preview-card { background: rgba(10, 10, 9, 0.85); border: 1px solid rgba(255,255,255,0.05); width: 100%; padding: 40px 20px; cursor: pointer; position: relative; overflow: hidden; backdrop-filter: blur(8px); display: flex; flex-direction: column; align-items: center; text-align: center; transition: transform 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275), box-shadow 0.4s; -webkit-tap-highlight-color: transparent; }
         .preview-card:hover { transform: translateY(-10px); box-shadow: 0 15px 40px rgba(0,0,0,1); }
         
-        .preview-rune { font-size: clamp(3rem, 6vw, 4rem); margin-bottom: 15px; color: var(--text-muted); transition: 0.4s ease; text-shadow: 0 0 10px rgba(0,0,0,0.8); position: relative; z-index: 2; }
+        .preview-rune { font-family: "Segoe UI Symbol", "Apple Symbols", var(--font-title); font-size: clamp(3rem, 6vw, 4rem); margin-bottom: 15px; color: var(--text-muted); transition: 0.4s ease; text-shadow: 0 0 10px rgba(0,0,0,0.8); position: relative; z-index: 2; }
         .preview-card:hover .preview-rune { color: inherit; text-shadow: 0 0 20px currentColor; animation: glint 1.5s infinite alternate; }
         .preview-text { display: flex; flex-direction: column; align-items: center; position: relative; z-index: 2; }
         .preview-title { font-family: var(--font-title); font-size: clamp(1.8rem, 5vw, 2.2rem); letter-spacing: 4px; margin-bottom: 5px; color: #fff; }
@@ -159,11 +168,12 @@
         
         .overlay { position: fixed; top: 0; left: 0; width: 100%; height: 100%; background-color: rgba(5, 5, 5, 0.96); z-index: 1002; display: flex; justify-content: center; align-items: center; opacity: 0; visibility: hidden; transition: 0.5s cubic-bezier(0.4, 0, 0.2, 1); backdrop-filter: blur(12px); padding: 20px; }
         .overlay.active { opacity: 1; visibility: visible; }
-        .realm-card { background-color: #0c0c0b; border: 1.5px solid var(--region-color); padding: 50px 40px; max-width: 600px; width: 100%; text-align: center; transform: translateY(40px) scale(0.95); transition: 0.5s cubic-bezier(0.34, 1.56, 0.64, 1); box-shadow: 0 0 60px rgba(0,0,0,1), inset 0 0 25px rgba(0,0,0,0.7); position: relative; max-height: 90vh; overflow-y: auto; }
+        /* Rimosso overflow-y: auto per impedire la comparsa della brutta scrollbar di sistema nei bordi magici */
+        .realm-card { background-color: #0c0c0b; border: 1.5px solid var(--region-color); padding: 50px 40px; max-width: 600px; width: 100%; text-align: center; transform: translateY(40px) scale(0.95); transition: 0.5s cubic-bezier(0.34, 1.56, 0.64, 1); box-shadow: 0 0 60px rgba(0,0,0,1), inset 0 0 25px rgba(0,0,0,0.7); position: relative; }
         .overlay.active .realm-card { transform: translateY(0) scale(1); }
         .realm-card::after { content: ''; position: absolute; top: -5px; left: -5px; right: -5px; bottom: -5px; border: 1px solid rgba(255,255,255,0.05); animation: runicPulse 3s infinite; pointer-events: none; }
         
-        .card-rune { font-size: clamp(2.5rem, 5vw, 3.5rem); color: var(--region-color); display: block; text-shadow: 0 0 20px var(--region-color); animation: glint 2s infinite alternate, subtleRotate 8s infinite linear; margin-bottom: 10px; }
+        .card-rune { font-family: "Segoe UI Symbol", "Apple Symbols", var(--font-title); font-size: clamp(2.5rem, 5vw, 3.5rem); color: var(--region-color); display: block; text-shadow: 0 0 20px var(--region-color); animation: glint 2s infinite alternate, subtleRotate 8s infinite linear; margin-bottom: 10px; }
         .card-title { font-family: var(--font-title); font-size: clamp(1.8rem, 5vw, 2.5rem); color: #fff; letter-spacing: 4px; margin-bottom: 5px; text-shadow: 0 0 15px rgba(255,255,255,0.2); }
         .card-subtitle { font-family: var(--font-title); font-size: clamp(0.9rem, 3vw, 1rem); color: var(--region-color); letter-spacing: 2px; margin-bottom: 25px; }
         .card-desc { font-size: clamp(1rem, 3vw, 1.25rem); color: var(--text-muted); margin-bottom: 40px; line-height: 1.6; }
@@ -173,10 +183,31 @@
         .close-overlay { position: absolute; top: 15px; right: 25px; background: none; border: none; color: var(--text-muted); font-size: 2rem; cursor: pointer; transition: 0.3s; z-index: 10; }
         .close-overlay:hover { color: var(--region-color); }
 
+        /* --- SCHERMATA DELLA MORTE (HP FINITI) --- */
+        .death-screen {
+            position: fixed; top: 0; left: 0; width: 100%; height: 100%;
+            background: rgba(0, 0, 0, 0.95); z-index: 10000;
+            display: flex; flex-direction: column; justify-content: center; align-items: center;
+            opacity: 0; visibility: hidden; transition: opacity 3s ease;
+        }
+        .death-screen.active { opacity: 1; visibility: visible; }
+        .death-text {
+            font-family: var(--font-title); font-size: clamp(3rem, 10vw, 8rem);
+            color: #8b0000; letter-spacing: 15px; text-shadow: 0 0 30px rgba(139,0,0,0.8);
+            margin-bottom: 40px; transform: scale(0.9); transition: transform 5s ease; text-align: center; line-height: 1.2;
+        }
+        .death-screen.active .death-text { transform: scale(1); }
+        .respawn-btn {
+            background: transparent; border: 1px solid #8b0000; color: #8b0000;
+            padding: 15px 40px; font-family: var(--font-title); font-size: 1.2rem;
+            letter-spacing: 3px; cursor: pointer; transition: 0.4s; text-transform: uppercase;
+        }
+        .respawn-btn:hover { background: #8b0000; color: #000; box-shadow: 0 0 20px #8b0000; }
+
         /* --- STILI DELLE PAGINE INTERNE --- */
         .page-wrapper { min-height: 100vh; display: flex; flex-direction: column; align-items: center; padding-bottom: 100px; position: relative; z-index: 10; }
         .region-header { text-align: center; padding: 100px 20px 40px; width: 100%; border-bottom: 1px solid rgba(255,255,255,0.05); background: linear-gradient(180deg, rgba(5,5,5,0.9), transparent); }
-        .region-rune { font-size: clamp(3.5rem, 8vw, 5rem); text-shadow: 0 0 30px currentColor; margin-bottom: 10px; animation: glint 3s infinite alternate; }
+        .region-rune { font-family: "Segoe UI Symbol", "Apple Symbols", var(--font-title); font-size: clamp(3.5rem, 8vw, 5rem); text-shadow: 0 0 30px currentColor; margin-bottom: 10px; animation: glint 3s infinite alternate; }
         .region-title { font-family: var(--font-title); font-size: clamp(2.5rem, 8vw, 4rem); letter-spacing: 6px; color: #fff; margin-bottom: 5px; text-shadow: 0 0 20px rgba(255,255,255,0.2); }
         .region-subtitle { font-family: var(--font-title); font-size: clamp(1rem, 3vw, 1.2rem); letter-spacing: 3px; text-transform: uppercase; }
         
@@ -257,6 +288,11 @@
             <path d="M 15 50 Q 50 100 85 50" fill="none" stroke="currentColor" stroke-width="2.5"/>
             <line x1="20" y1="20" x2="80" y2="20" stroke="currentColor" stroke-width="2.5"/>
         </svg>
+    </div>
+
+    <div id="death-screen" class="death-screen">
+        <h1 class="death-text" id="death-text">IL TEMPO SFUMA</h1>
+        <button class="respawn-btn" id="respawn-btn" onclick="location.reload()">Rinascere</button>
     </div>
 
     <div class="home-btn-container" onclick="goToHome()" title="Torna all'Interregno">
@@ -349,14 +385,14 @@
                     </div>
                 </div>
                 <div class="preview-card forgia" onclick="openOverlay('forgia')" style="color: var(--magic-forgia);">
-                    <span class="preview-rune">⚒</span>
+                    <span class="preview-rune">&#x2692;&#xFE0E;</span>
                     <div class="preview-text">
                         <h3 class="preview-title" data-i18n="p_for_t">La Forgia</h3>
                         <p class="preview-desc" data-i18n="p_for_d">Il Dominio dei Progetti</p>
                     </div>
                 </div>
                 <div class="preview-card cime" onclick="openOverlay('cime')" style="color: var(--magic-cime);">
-                    <span class="preview-rune">🏔</span>
+                    <span class="preview-rune">&#x1F3D4;&#xFE0E;</span>
                     <div class="preview-text">
                         <h3 class="preview-title" data-i18n="p_cim_t">Le Cime</h3>
                         <p class="preview-desc" data-i18n="p_cim_d">Il Dominio del Corpo</p>
@@ -389,7 +425,10 @@
                 <p class="lore-text" data-i18n="v_sep_lore">"Dove l'aria si fa densa di nebbia, il suono diventa l'unica guida. Le frequenze scolpiscono il silenzio, creando cattedrali di vibrazioni."</p>
                 <div class="project-grid">
                     <div class="project-card-inner">
-                        <div class="card-image-wrapper"><img src="https://images.unsplash.com/photo-1510915361894-db8b60106cb1?auto=format&fit=crop&q=80&w=800" alt="Sinfonia"><a href="#" class="card-overlay-btn" data-i18n="btn_listen">Ascolta</a></div>
+                        <div class="card-image-wrapper">
+                            <img src="https://images.unsplash.com/photo-1510915361894-db8b60106cb1?auto=format&fit=crop&q=80&w=800" alt="Sinfonia">
+                            <a href="#" class="card-overlay-btn" data-i18n="btn_listen">Ascolta</a>
+                        </div>
                         <div class="card-content">
                             <div class="card-tags"><span data-i18n="tag_ambient">Ambient</span><span data-i18n="tag_acoustic">Acustica</span></div>
                             <h3 data-i18n="sep_p1_t">Sinfonia delle Rovine</h3>
@@ -398,7 +437,10 @@
                         </div>
                     </div>
                     <div class="project-card-inner">
-                        <div class="card-image-wrapper"><img src="https://images.unsplash.com/photo-1598488035139-bdbb2231ce04?auto=format&fit=crop&q=80&w=800" alt="Echi"><a href="#" class="card-overlay-btn" data-i18n="btn_examine">Esamina</a></div>
+                        <div class="card-image-wrapper">
+                            <img src="https://images.unsplash.com/photo-1598488035139-bdbb2231ce04?auto=format&fit=crop&q=80&w=800" alt="Echi">
+                            <a href="#" class="card-overlay-btn" data-i18n="btn_examine">Esamina</a>
+                        </div>
                         <div class="card-content">
                             <div class="card-tags"><span data-i18n="tag_live">Live Set</span><span data-i18n="tag_studio">Studio</span></div>
                             <h3 data-i18n="sep_p2_t">Echi dalla Nebbia</h3>
@@ -422,7 +464,10 @@
                 <p class="lore-text" data-i18n="v_nok_lore">"Sotto un cielo di stelle fredde, il tratto diventa inchiostro cosmico. Qui l'immaginazione si cristallizza in forme eteree."</p>
                 <div class="project-grid">
                     <div class="project-card-inner">
-                        <div class="card-image-wrapper"><img src="https://images.unsplash.com/photo-1513364776144-60967b0f800f?auto=format&fit=crop&q=80&w=800" alt="Volto"><a href="#" class="card-overlay-btn" data-i18n="btn_observe">Osserva</a></div>
+                        <div class="card-image-wrapper">
+                            <img src="https://images.unsplash.com/photo-1513364776144-60967b0f800f?auto=format&fit=crop&q=80&w=800" alt="Volto">
+                            <a href="#" class="card-overlay-btn" data-i18n="btn_observe">Osserva</a>
+                        </div>
                         <div class="card-content">
                             <div class="card-tags"><span data-i18n="tag_concept">Concept Art</span><span data-i18n="tag_ink">Inchiostro</span></div>
                             <h3 data-i18n="nok_p1_t">Il Volto della Stella</h3>
@@ -431,7 +476,10 @@
                         </div>
                     </div>
                     <div class="project-card-inner">
-                        <div class="card-image-wrapper"><img src="https://images.unsplash.com/photo-1550684376-efcbd6e3f031?auto=format&fit=crop&q=80&w=800" alt="Canvas"><a href="#" class="card-overlay-btn" data-i18n="btn_explore">Esplora</a></div>
+                        <div class="card-image-wrapper">
+                            <img src="https://images.unsplash.com/photo-1550684376-efcbd6e3f031?auto=format&fit=crop&q=80&w=800" alt="Canvas">
+                            <a href="#" class="card-overlay-btn" data-i18n="btn_explore">Esplora</a>
+                        </div>
                         <div class="card-content">
                             <div class="card-tags"><span data-i18n="tag_digital">Digital</span><span data-i18n="tag_sketch">Sketchbook</span></div>
                             <h3 data-i18n="nok_p2_t">Appunti di Scintipietra</h3>
@@ -455,7 +503,10 @@
                 <p class="lore-text" data-i18n="v_alt_lore">"La pura devozione per il metallo temprato, l'ossessione per la velocità e l'odore dell'olio bruciato al vento autunnale."</p>
                 <div class="project-grid">
                     <div class="project-card-inner">
-                        <div class="card-image-wrapper"><img src="https://images.unsplash.com/photo-1583121274602-3e2820c69888?auto=format&fit=crop&q=80&w=800" alt="V8"><a href="#" class="card-overlay-btn" data-i18n="btn_examine">Esamina</a></div>
+                        <div class="card-image-wrapper">
+                            <img src="https://images.unsplash.com/photo-1583121274602-3e2820c69888?auto=format&fit=crop&q=80&w=800" alt="V8">
+                            <a href="#" class="card-overlay-btn" data-i18n="btn_examine">Esamina</a>
+                        </div>
                         <div class="card-content">
                             <div class="card-tags"><span data-i18n="tag_build">Custom Build</span><span data-i18n="tag_mech">Meccanica</span></div>
                             <h3 data-i18n="alt_p1_t">Cuore di Ferro</h3>
@@ -464,7 +515,10 @@
                         </div>
                     </div>
                     <div class="project-card-inner">
-                        <div class="card-image-wrapper"><img src="https://images.unsplash.com/photo-1449426468159-d96dbf08f19f?auto=format&fit=crop&q=80&w=800" alt="Diari"><a href="#" class="card-overlay-btn" data-i18n="btn_log">Apri Diario</a></div>
+                        <div class="card-image-wrapper">
+                            <img src="https://images.unsplash.com/photo-1449426468159-d96dbf08f19f?auto=format&fit=crop&q=80&w=800" alt="Diari">
+                            <a href="#" class="card-overlay-btn" data-i18n="btn_log">Apri Diario</a>
+                        </div>
                         <div class="card-content">
                             <div class="card-tags"><span data-i18n="tag_road">On the Road</span><span data-i18n="tag_photo">Fotografia</span></div>
                             <h3 data-i18n="alt_p2_t">Pellegrinaggio d'Ambra</h3>
@@ -480,7 +534,7 @@
     <article id="view-forgia" class="view">
         <div class="page-wrapper">
             <header class="region-header">
-                <div class="region-rune">⚒</div>
+                <div class="region-rune">&#x2692;&#xFE0E;</div>
                 <h1 class="region-title" data-i18n="p_for_t">La Forgia</h1>
                 <div class="region-subtitle" data-i18n="p_for_d">Il Dominio dei Progetti</div>
             </header>
@@ -488,7 +542,10 @@
                 <p class="lore-text" data-i18n="v_for_lore">"Scintille, calore e incudine. È la fornace da cui nascono architetture digitali, codice grezzo e soluzioni tecniche."</p>
                 <div class="project-grid">
                     <div class="project-card-inner">
-                        <div class="card-image-wrapper"><img src="https://images.unsplash.com/photo-1555066931-4365d14bab8c?auto=format&fit=crop&q=80&w=800" alt="Web"><a href="#" class="card-overlay-btn" data-i18n="btn_inspect">Ispeziona</a></div>
+                        <div class="card-image-wrapper">
+                            <img src="https://images.unsplash.com/photo-1555066931-4365d14bab8c?auto=format&fit=crop&q=80&w=800" alt="Web">
+                            <a href="#" class="card-overlay-btn" data-i18n="btn_inspect">Ispeziona</a>
+                        </div>
                         <div class="card-content">
                             <div class="card-tags"><span data-i18n="tag_web">Web App</span><span data-i18n="tag_front">Front-end</span></div>
                             <h3 data-i18n="for_p1_t">Architettura Astrale</h3>
@@ -497,7 +554,10 @@
                         </div>
                     </div>
                     <div class="project-card-inner">
-                        <div class="card-image-wrapper"><img src="https://images.unsplash.com/photo-1518770660439-4636190af475?auto=format&fit=crop&q=80&w=800" alt="Hardware"><a href="#" class="card-overlay-btn" data-i18n="btn_analyze">Analizza</a></div>
+                        <div class="card-image-wrapper">
+                            <img src="https://images.unsplash.com/photo-1518770660439-4636190af475?auto=format&fit=crop&q=80&w=800" alt="Hardware">
+                            <a href="#" class="card-overlay-btn" data-i18n="btn_analyze">Analizza</a>
+                        </div>
                         <div class="card-content">
                             <div class="card-tags"><span data-i18n="tag_hard">Hardware</span><span data-i18n="tag_script">Scripting</span></div>
                             <h3 data-i18n="for_p2_t">Terminale Runico</h3>
@@ -513,7 +573,7 @@
     <article id="view-cime" class="view">
         <div class="page-wrapper">
             <header class="region-header">
-                <div class="region-rune">🏔</div>
+                <div class="region-rune">&#x1F3D4;&#xFE0E;</div>
                 <h1 class="region-title" data-i18n="p_cim_t">Le Cime</h1>
                 <div class="region-subtitle" data-i18n="p_cim_d">Il Dominio del Corpo</div>
             </header>
@@ -521,7 +581,10 @@
                 <p class="lore-text" data-i18n="v_cim_lore">"Ghiaccio e pietra. Il luogo della disciplina inflessibile, dove temprare la carne e la volontà contro il gelo dell'esistenza."</p>
                 <div class="project-grid">
                     <div class="project-card-inner">
-                        <div class="card-image-wrapper"><img src="https://images.unsplash.com/photo-1517836357463-d25dfeac3438?auto=format&fit=crop&q=80&w=800" alt="Routine"><a href="#" class="card-overlay-btn" data-i18n="btn_read">Leggi</a></div>
+                        <div class="card-image-wrapper">
+                            <img src="https://images.unsplash.com/photo-1517836357463-d25dfeac3438?auto=format&fit=crop&q=80&w=800" alt="Routine">
+                            <a href="#" class="card-overlay-btn" data-i18n="btn_read">Leggi</a>
+                        </div>
                         <div class="card-content">
                             <div class="card-tags"><span data-i18n="tag_rout">Routine</span><span data-i18n="tag_str">Forza</span></div>
                             <h3 data-i18n="cim_p1_t">Protocollo del Gigante</h3>
@@ -530,7 +593,10 @@
                         </div>
                     </div>
                     <div class="project-card-inner">
-                        <div class="card-image-wrapper"><img src="https://images.unsplash.com/photo-1461896836934-ffe607ba8211?auto=format&fit=crop&q=80&w=800" alt="Dati"><a href="#" class="card-overlay-btn" data-i18n="btn_verify">Verifica</a></div>
+                        <div class="card-image-wrapper">
+                            <img src="https://images.unsplash.com/photo-1461896836934-ffe607ba8211?auto=format&fit=crop&q=80&w=800" alt="Dati">
+                            <a href="#" class="card-overlay-btn" data-i18n="btn_verify">Verifica</a>
+                        </div>
                         <div class="card-content">
                             <div class="card-tags"><span data-i18n="tag_data">Dati</span><span data-i18n="tag_track">Tracker</span></div>
                             <h3 data-i18n="cim_p2_t">Resistenza al Gelo</h3>
@@ -593,7 +659,6 @@
                 const newWidth = wrapper.offsetWidth;
                 const newHeight = wrapper.offsetHeight;
                 
-                // Evita il reset su mobile quando la barra degli indirizzi va via (cambia solo l'altezza)
                 if (newWidth !== oldWidth || stars === undefined) {
                     width = canvas.width = newWidth;
                     height = canvas.height = newHeight;
@@ -640,6 +705,7 @@
         // --- TRANSLATION DICTIONARY E MAGIA DELLE RUNE ---
         const translations = {
             'it': {
+                'death_msg': "IL TEMPO SFUMA", 'btn_respawn': "RINASCERE",
                 'btn_map_nav': "MAPPA", 'hero_manifesto': "Cinque regni. Cinque frammenti di un'unica anima.", 'scroll_down': "Esplora l'Interregno ↓", 'map_title': "La Mappa dell'Anima", 'btn_enter': "Addentrarsi", 'btn_back': "Ritorna alla Mappa",
                 'btn_listen': "Ascolta", 'btn_examine': "Esamina", 'btn_observe': "Osserva", 'btn_explore': "Esplora", 'btn_log': "Apri Diario", 'btn_inspect': "Ispeziona", 'btn_analyze': "Analizza", 'btn_read': "Leggi", 'btn_verify': "Verifica",
                 'tag_ambient': "Ambient", 'tag_acoustic': "Acustica", 'tag_live': "Live Set", 'tag_studio': "Studio", 'tag_concept': "Concept Art", 'tag_ink': "Inchiostro", 'tag_digital': "Digital", 'tag_sketch': "Sketchbook",
@@ -663,6 +729,7 @@
                 'cim_p2_t': "Resistenza al Gelo", 'cim_p2_l': "\"Numeri incisi sul ghiaccio, per tenere traccia di ogni stilla di sudore versata.\"", 'cim_p2_d': "Database e fogli di calcolo sviluppati per monitorare statistiche vitali, metriche di sollevamento pesi e macro-nutrienti."
             },
             'en': {
+                'death_msg': "TIME FADES", 'btn_respawn': "RESPAWN",
                 'btn_map_nav': "MAP", 'hero_manifesto': "Five realms. Five fragments of a single soul.", 'scroll_down': "Explore the Lands Between ↓", 'map_title': "Map of the Soul", 'btn_enter': "Delve Deeper", 'btn_back': "Return to Map",
                 'btn_listen': "Listen", 'btn_examine': "Examine", 'btn_observe': "Observe", 'btn_explore': "Explore", 'btn_log': "Open Log", 'btn_inspect': "Inspect", 'btn_analyze': "Analyze", 'btn_read': "Read", 'btn_verify': "Verify",
                 'tag_ambient': "Ambient", 'tag_acoustic': "Acoustic", 'tag_live': "Live Set", 'tag_studio': "Studio", 'tag_concept': "Concept Art", 'tag_ink': "Ink", 'tag_digital': "Digital", 'tag_sketch': "Sketchbook",
@@ -691,8 +758,8 @@
             'sepolcri': { title: translations[lang]['p_sep_t'], subtitle: translations[lang]['p_sep_d'], desc: translations[lang]['sep_p1_d'], rune: '♱', color: '#3d8c4c' },
             'nokron': { title: translations[lang]['p_nok_t'], subtitle: translations[lang]['p_nok_d'], desc: translations[lang]['nok_p1_d'], rune: '✧', color: '#4a6fa5' },
             'altus': { title: translations[lang]['p_alt_t'], subtitle: translations[lang]['p_alt_d'], desc: translations[lang]['alt_p1_d'], rune: '❂', color: '#c5a059' },
-            'forgia': { title: translations[lang]['p_for_t'], subtitle: translations[lang]['p_for_d'], desc: translations[lang]['for_p1_d'], rune: '⚒', color: '#b24c3d' },
-            'cime': { title: translations[lang]['p_cim_t'], subtitle: translations[lang]['p_cim_d'], desc: translations[lang]['cim_p1_d'], rune: '🏔', color: '#e0e0e0' }
+            'forgia': { title: translations[lang]['p_for_t'], subtitle: translations[lang]['p_for_d'], desc: translations[lang]['for_p1_d'], rune: '\u2692\uFE0E', color: '#b24c3d' },
+            'cime': { title: translations[lang]['p_cim_t'], subtitle: translations[lang]['p_cim_d'], desc: translations[lang]['cim_p1_d'], rune: '\u1F3D4\uFE0E', color: '#e0e0e0' }
         });
 
         function scrambleText(element, finalString) {
@@ -747,18 +814,36 @@
             setTimeout(hideLoader, 2500); 
         });
 
-        // --- HUD LOGIC ---
-        let stamina = 100; let fp = 100;
+        // --- HUD LOGIC (HP DRAIN NEL TEMPO) ---
+        let hp = 100; let stamina = 100; let fp = 100; let isDead = false;
+        const hpFill = document.getElementById('hp-fill');
         const stFill = document.getElementById('stamina-fill');
         const fpFill = document.getElementById('fp-fill');
 
-        window.addEventListener('scroll', () => { stamina = Math.max(5, stamina - 2); stFill.style.width = stamina + '%'; });
+        window.addEventListener('scroll', () => { if(!isDead){ stamina = Math.max(5, stamina - 2); stFill.style.width = stamina + '%'; } });
+        
         setInterval(() => {
+            if(isDead) return;
+
+            hp -= 100 / (5 * 60 * 10); 
+            if (hp <= 0) {
+                hp = 0;
+                triggerDeath();
+            }
+            hpFill.style.width = hp + '%';
+
             if (stamina < 100) { stamina = Math.min(100, stamina + 3); stFill.style.width = stamina + '%'; }
             if (fp < 100) { fp = Math.min(100, fp + 1.5); fpFill.style.width = fp + '%'; }
         }, 100);
 
-        function consumeFP(amount) { fp = Math.max(0, fp - amount); fpFill.style.width = fp + '%'; }
+        function consumeFP(amount) { if(!isDead){ fp = Math.max(0, fp - amount); fpFill.style.width = fp + '%'; } }
+
+        function triggerDeath() {
+            isDead = true;
+            document.getElementById('death-screen').classList.add('active');
+            scrambleText(document.getElementById('death-text'), translations[currentLang]['death_msg']);
+            scrambleText(document.getElementById('respawn-btn'), translations[currentLang]['btn_respawn']);
+        }
 
         // --- GESTIONE OVERLAY E MAPPA MODAL GLOBALE ---
         let currentSelectedRealm = '';
@@ -766,6 +851,7 @@
         const mapModal = document.getElementById('map-modal');
 
         function toggleMapModal() {
+            if(isDead) return;
             if (mapModal.classList.contains('active')) {
                 mapModal.classList.remove('active');
             } else {
@@ -775,6 +861,7 @@
         }
 
         function openOverlay(id) {
+            if(isDead) return;
             currentSelectedRealm = id;
             const data = getDb(currentLang)[id];
             document.getElementById('card-title').innerText = data.title;
@@ -787,7 +874,6 @@
 
         function closeOverlay() { overlay.classList.remove('active'); }
 
-        // BIND CLICK SU TUTTE LE MAPPE
         document.querySelectorAll('.map-region').forEach(region => {
             region.addEventListener('click', () => {
                 if(region.id) openOverlay(region.id);
@@ -812,6 +898,7 @@
         }
 
         function goToHome() {
+            if(isDead) return;
             if (mapModal && mapModal.classList.contains('active')) { mapModal.classList.remove('active'); }
             if(document.getElementById('view-home').classList.contains('active')) {
                 document.getElementById('mappa').scrollIntoView({ behavior: 'smooth' });
